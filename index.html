@@ -489,6 +489,9 @@
     border: 1px solid rgba(56,189,248,0.15);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
   }
   .cta-banner::before {
     content: '';
@@ -497,6 +500,26 @@
     width: 300px; height: 300px;
     background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
     pointer-events: none;
+  }
+  .cta-content { flex: 1; min-width: 0; position: relative; z-index: 1; }
+  .cta-photo {
+    flex-shrink: 0;
+    width: 150px;
+    margin: -28px -28px -24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 15%;
+    display: block;
+    mask-image: linear-gradient(to right, transparent 0%, black 30%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%);
+  }
+  @media (max-width: 600px) {
+    .cta-photo { width: 100px; margin-left: 12px; }
   }
   .cta-badge {
     display: inline-block;
@@ -628,13 +651,18 @@
     </div>
     <!-- CTA: Fastcampus Course -->
     <div class="cta-banner" style="margin-top:20px;">
-      <div class="cta-badge">New Course</div>
-      <div class="cta-title">일잘러를 위한 구글 AI 생태계 바이블<br><span style="font-weight:400;font-size:14px;color:#cbd5e1;">워크스페이스 연동부터 콘텐츠·서비스 자동화까지 w. only 구글</span></div>
-      <div class="cta-desc">이 대시보드에 나온 Gemini를 포함한 구글 AI 생태계 전체를 실무에 적용하는 방법을 배워보세요. 워크스페이스 연동, 콘텐츠 자동화, 서비스 구축까지 구글만으로 완성하는 AI 업무 자동화 강의입니다.</div>
-      <a href="https://fastcampus.co.kr/biz_online_googlebible?utm_source=kakao&utm_medium=viral&utm_campaign=prd^260323^260612&utm_content=teacher^260612" target="_blank" rel="noopener" class="cta-link">
-        강의 자세히 보기
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </a>
+      <div class="cta-content">
+        <div class="cta-badge">New Course</div>
+        <div class="cta-title">일잘러를 위한 구글 AI 생태계 바이블<br><span style="font-weight:400;font-size:14px;color:#cbd5e1;">워크스페이스 연동부터 콘텐츠·서비스 자동화까지 w. only 구글</span></div>
+        <div class="cta-desc">이 대시보드에 나온 Gemini를 포함한 구글 AI 생태계 전체를 실무에 적용하는 방법을 배워보세요. 워크스페이스 연동, 콘텐츠 자동화, 서비스 구축까지 구글만으로 완성하는 AI 업무 자동화 강의입니다.</div>
+        <a href="https://fastcampus.co.kr/biz_online_googlebible?utm_source=kakao&utm_medium=viral&utm_campaign=prd^260323^260612&utm_content=teacher^260612" target="_blank" rel="noopener" class="cta-link">
+          강의 자세히 보기
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="cta-photo">
+        <img src="instructor.jpg" alt="강슬기 강사" loading="lazy">
+      </div>
     </div>
 
     <!-- Author Card -->
