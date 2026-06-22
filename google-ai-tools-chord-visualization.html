@@ -477,7 +477,7 @@
       <div>
         <div class="kicker"><span class="kicker-dot"></span> GOOGLE AI WORK TOOL MAP</div>
         <h1>Google AI 업무 도구 분류 맵</h1>
-        <p class="subtitle">Google AI, Workspace, 개발·자동화 도구를 <strong>분야</strong>, <strong>기능 구분</strong>, <strong>활용 방식</strong>으로 비교해 보는 인터랙티브 관계도입니다.</p>
+        <p class="subtitle">Google AI, Workspace, 개발·자동화 도구를 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong>으로 비교해 보는 인터랙티브 관계도입니다.</p>
         <div class="course-banner" aria-label="일잘러를 위한 구글 AI 생태계 바이블 강의 배너">
           <img src="https://seulkikaang.github.io/ai-survey-dashboard/google-banner.webp" alt="일잘러를 위한 구글 AI 생태계 바이블 배너 이미지" loading="lazy">
           <div>
@@ -532,7 +532,7 @@
         <p class="side-desc" id="tableDesc">분류 항목을 클릭하면, 그 묶음 안에서 각 툴이 어떤 업무에 쓰이는지 비교표로 바뀝니다.</p>
       </div>
       <div class="table-wrap" id="tableWrap">
-        <div class="empty-state">오른쪽 상단의 <strong>분야</strong>, <strong>기능 구분</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.</div>
+        <div class="empty-state">오른쪽 상단의 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.</div>
       </div>
     </aside>
   </main>
@@ -556,6 +556,8 @@
       '개발·자동화': '#A142F4'
     };
 
+    const levelOrder = ['바로 사용', '설정 필요', '학습 필요', '훈련 필요', '조직 운영용'];
+
     const usageOrder = ['일상 업무 보조', '자료 기반 생성', '자료 조사·아이디어 기획', '문서·보고서·데이터', '회의·커뮤니케이션 정리', '제안서·발표 준비', '홍보·마케팅', '반복 업무 자동화', '업무용 도구 만들기', '에이전트 자동화'];
     const usageToolOrder = {
       '일상 업무 보조': ['Gemini', 'Gemini Live', 'Gemini in Chrome', 'AI Mode'],
@@ -577,12 +579,11 @@
       '이미지·영상·콘텐츠': ['🎬', '이미지·영상·콘텐츠', '텍스트를 넘어 이미지, 영상, 무드보드, 홍보 소재처럼 보여주는 결과물을 만드는 영역입니다.'],
       '앱·서비스': ['🧩', '앱·서비스', '시트 기반 앱, AI 미니앱, UI, 백엔드처럼 업무용 도구를 서비스 형태로 만드는 묶음입니다.'],
       '개발·자동화': ['⚙️', '개발·자동화', '스크립트, CLI, 에이전트, 오픈 모델로 반복 업무와 시스템 운영을 자동화하는 영역입니다.'],
-      '범용 생성·대화': ['💬', '범용 생성·대화', '질문, 글쓰기, 요약, 설명처럼 대부분의 사무 업무에서 출발점이 되는 대화형 AI 기능입니다.'],
-      '심층 조사·자료 이해': ['🔎', '심층 조사·자료 이해', '자료를 읽고 연결하고 근거를 정리해 조사, 비교, 기획의 품질을 높이는 기능입니다.'],
-      '문서·협업 보조': ['📝', '문서·협업 보조', '메일, 문서, 시트, 회의, 발표 등 협업 문서 흐름을 빠르게 만드는 기능입니다.'],
-      '이미지·영상 생성': ['🖼️', '이미지·영상 생성', '이미지, 영상, 무드보드, 브랜드 소재처럼 시각 결과물을 빠르게 만드는 기능입니다.'],
-      '자동화·앱 제작': ['🛠️', '자동화·앱 제작', '반복 작업을 플로우로 묶거나, 업무용 앱과 미니도구로 바꾸는 기능입니다.'],
-      '개발·운영': ['☁️', '개발·운영', '모델 테스트, 배포, 백엔드, CLI 운영처럼 개발자·운영자 영역에 가까운 기능입니다.'],
+      '바로 사용': ['⚡', '바로 사용', '설치나 별도 구조화 없이 계정 안에서 바로 눌러 써볼 수 있는 도구입니다.'],
+      '설정 필요': ['🧩', '설정 필요', '자료 업로드, 연결, 조건 지정처럼 처음 한 번의 세팅이 필요한 도구입니다.'],
+      '학습 필요': ['📚', '학습 필요', '좋은 결과를 내려면 사용법, 프롬프트, 편집 기준을 익혀야 하는 도구입니다.'],
+      '훈련 필요': ['🏋️', '훈련 필요', '에이전트·모델·반복 워크플로우를 목적에 맞게 길들이며 써야 하는 도구입니다.'],
+      '조직 운영용': ['🏢', '조직 운영용', '팀/조직 단위 권한, 배포, 운영 정책까지 함께 봐야 하는 도구입니다.'],
       '일상 업무 보조': ['✨', '일상 업무 보조', '업무 중 생기는 질문, 초안, 요약, 설명, 검색 보조를 바로 처리하는 활용 방식입니다.'],
       '자료 기반 생성': ['📚', '자료 기반 생성', '내가 준 자료나 정해둔 지식을 기준으로 답변, 초안, 요약을 만드는 활용 방식입니다.'],
       '자료 조사·아이디어 기획': ['🧭', '자료 조사·아이디어 기획', '새 주제 탐색, 자료 검토, 사례 비교, 아이디어 정리에 쓰이는 활용 방식입니다.'],
@@ -596,38 +597,38 @@
     };
 
     const tools = [
-      {name:'Gemini', icon:'✦', domain:'Google AI', function:'범용 생성·대화', usage:'일상 업무 보조', desc:'질문, 글쓰기, 요약, 번역, 아이디어 정리에 쓰는 기본 AI입니다. 업무 중 막히는 지점을 빠르게 풀어주는 출발점 역할을 합니다.'},
-      {name:'Gem', icon:'◆', domain:'Google AI', function:'범용 생성·대화', usage:'자료 기반 생성', desc:'반복해서 쓰는 지시와 역할을 저장해 맞춤형 AI처럼 쓰는 도구입니다. 팀별 업무 규칙이나 개인 작업 방식에 맞춰 사용할 수 있습니다.'},
-      {name:'Gemini Live', icon:'◉', domain:'Google AI', function:'범용 생성·대화', usage:'일상 업무 보조', desc:'음성으로 실시간 대화하며 생각을 정리하는 방식의 AI입니다. 회의 전 준비, 설명 연습, 빠른 질의응답에 어울립니다.'},
-      {name:'Google AI Studio', icon:'AI', domain:'Google AI', function:'개발·운영', usage:'업무용 도구 만들기', desc:'Gemini 모델을 테스트하고 API 기반 프로토타입을 만드는 공간입니다. 프롬프트와 모델 반응을 실험한 뒤 개발로 연결할 수 있습니다.'},
-      {name:'AI Mode', icon:'⌕', domain:'Google AI', function:'심층 조사·자료 이해', usage:'일상 업무 보조', desc:'검색 결과를 AI 답변 형태로 탐색하는 검색 경험입니다. 자료 조사 초반에 개념과 비교 포인트를 빠르게 잡을 수 있습니다.'},
-      {name:'Gemini in Chrome', icon:'🌐', domain:'Google AI', function:'범용 생성·대화', usage:'일상 업무 보조', desc:'브라우저에서 보고 있는 웹페이지 맥락을 활용하는 AI 보조 기능입니다. 페이지 요약, 비교, 다음 행동 정리에 적합합니다.'},
-      {name:'Deep Research', icon:'DR', domain:'리서치·학습', function:'심층 조사·자료 이해', usage:'자료 조사·아이디어 기획', desc:'복잡한 주제에 대해 여러 자료를 찾아 보고서 형태로 정리하는 리서치 기능입니다. 시장, 사례, 정책, 기술 비교처럼 깊이가 필요한 조사에 맞습니다.'},
-      {name:'NotebookLM', icon:'NB', domain:'리서치·학습', function:'심층 조사·자료 이해', usage:'자료 기반 생성', desc:'올려둔 자료를 기준으로 요약, 질의응답, 학습 정리를 해주는 도구입니다. 내부 문서나 긴 자료를 근거 기반으로 다시 읽을 때 유용합니다.'},
-      {name:'Disco', icon:'◌', domain:'앱·서비스', function:'심층 조사·자료 이해', usage:'업무용 도구 만들기', desc:'관심 주제와 관련된 자료를 발견하고 탐색하는 성격의 도구입니다. 조사 범위를 넓히거나 초기 아이디어를 찾을 때 쓸 수 있습니다.'},
-      {name:'Gmail AI', icon:'✉', domain:'Workspace', function:'문서·협업 보조', usage:'회의·커뮤니케이션 정리', desc:'메일 초안, 답장, 요약을 도와주는 Gmail 안의 AI 기능입니다. 반복적인 커뮤니케이션 작성 시간을 줄이는 데 적합합니다.'},
-      {name:'Doc AI', icon:'DOC', domain:'Workspace', function:'문서·협업 보조', usage:'문서·보고서·데이터', desc:'문서 초안 작성, 요약, 문장 다듬기를 도와주는 Docs 기반 AI입니다. 보고서나 안내문을 빠르게 정리할 때 쓸 수 있습니다.'},
-      {name:'Sheets AI', icon:'▦', domain:'Workspace', function:'문서·협업 보조', usage:'문서·보고서·데이터', desc:'스프레드시트 안에서 표 정리, 함수, 데이터 해석을 돕는 AI입니다. 반복 입력과 간단한 분석 작업을 줄이는 데 좋습니다.'},
-      {name:'Slides AI', icon:'▣', domain:'Workspace', function:'문서·협업 보조', usage:'제안서·발표 준비', desc:'슬라이드 초안, 구조, 발표 자료 생성을 보조하는 기능입니다. 문서나 아이디어를 발표용 흐름으로 바꾸는 데 쓰입니다.'},
-      {name:'Meet AI', icon:'🎙', domain:'Workspace', function:'문서·협업 보조', usage:'회의·커뮤니케이션 정리', desc:'회의 내용을 요약하고 액션아이템을 정리하는 Meet 기반 AI입니다. 회의 후 정리와 공유 시간을 줄여줍니다.'},
-      {name:'Forms AI', icon:'⌁', domain:'Workspace', function:'문서·협업 보조', usage:'회의·커뮤니케이션 정리', desc:'설문, 신청서, 피드백 폼의 문항 구성을 돕는 기능입니다. 응답 수집 구조를 빠르게 만들 때 유용합니다.'},
-      {name:'Workspace Studio', icon:'WS', domain:'Workspace', function:'자동화·앱 제작', usage:'반복 업무 자동화', desc:'Workspace 안의 반복 업무를 자동화 흐름으로 만드는 도구입니다. 메일, 문서, 시트 작업을 조건과 실행으로 묶을 수 있습니다.'},
-      {name:'Workspace CLI', icon:'CLI', domain:'Workspace', function:'개발·운영', usage:'에이전트 자동화', desc:'Workspace 작업을 명령어로 다루는 개발자용 인터페이스입니다. 문서, 계정, 파일 관련 반복 작업을 스크립트화할 때 쓰입니다.'},
-      {name:'Vids', icon:'▶', domain:'Workspace', function:'이미지·영상 생성', usage:'제안서·발표 준비', desc:'업무용 설명 영상과 안내 영상을 만드는 Google Workspace 도구입니다. 문서보다 영상이 더 빠른 전달 상황에 사용할 수 있습니다.'},
-      {name:'Nano Banana', icon:'🍌', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'홍보·마케팅', desc:'이미지 생성과 편집에 쓰이는 시각 제작 도구입니다. 제품 설명, 안내 이미지, 캠페인 소재처럼 눈에 보이는 결과물을 만들 때 맞습니다.'},
-      {name:'Flow', icon:'〰', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'홍보·마케팅', desc:'시나리오와 장면 흐름을 영상으로 만드는 생성형 영상 도구입니다. 짧은 홍보 영상이나 설명형 콘텐츠 초안에 활용할 수 있습니다.'},
-      {name:'Pomeli', icon:'✧', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'홍보·마케팅', desc:'브랜드와 마케팅 소재 제작에 가까운 콘텐츠 생성 도구입니다. 안내 이미지, 캠페인 시안, 홍보 문구와 비주얼을 함께 잡을 때 좋습니다.'},
-      {name:'Mixboard', icon:'◍', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'자료 조사·아이디어 기획', desc:'이미지와 레퍼런스를 모아 무드보드처럼 방향을 잡는 도구입니다. 디자인 톤, 캠페인 분위기, 시각 콘셉트를 정리할 때 유용합니다.'},
-      {name:'Text FL', icon:'T', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'자료 조사·아이디어 기획', desc:'텍스트 생성과 언어 실험에 가까운 도구로 볼 수 있습니다. 문장 변형, 카피 후보, 짧은 텍스트 실험에 활용할 수 있습니다.'},
-      {name:'AppSheet', icon:'APP', domain:'앱·서비스', function:'자동화·앱 제작', usage:'업무용 도구 만들기', desc:'스프레드시트 데이터를 기반으로 업무용 앱을 만드는 노코드 도구입니다. 점검, 신청, 관리, 현장 기록 앱을 빠르게 만들 수 있습니다.'},
-      {name:'Opal', icon:'◇', domain:'앱·서비스', function:'자동화·앱 제작', usage:'반복 업무 자동화', desc:'프롬프트와 간단한 구성을 바탕으로 AI 미니앱을 만드는 도구입니다. 사내 업무 보조 도구나 실험용 앱 프로토타입에 어울립니다.'},
-      {name:'Firebase', icon:'🔥', domain:'앱·서비스', function:'개발·운영', usage:'업무용 도구 만들기', desc:'앱의 인증, 데이터베이스, 호스팅 같은 백엔드를 제공하는 플랫폼입니다. 실제 서비스로 이어지는 업무용 도구를 만들 때 필요합니다.'},
-      {name:'Stitch', icon:'ST', domain:'앱·서비스', function:'자동화·앱 제작', usage:'업무용 도구 만들기', desc:'앱 화면이나 UI 흐름을 빠르게 구성하는 도구로 볼 수 있습니다. 아이디어를 업무용 화면 초안으로 바꾸는 데 쓰입니다.'},
-      {name:'Apps Script', icon:'</>', domain:'개발·자동화', function:'자동화·앱 제작', usage:'반복 업무 자동화', desc:'Google Workspace 작업을 코드로 자동화하는 스크립트 도구입니다. 시트 처리, 메일 발송, 문서 생성 같은 반복 작업에 강합니다.'},
-      {name:'Antigravity', icon:'AG', domain:'개발·자동화', function:'개발·운영', usage:'에이전트 자동화', desc:'AI 에이전트가 코드 작성, 실행, 검증 흐름을 함께 처리하도록 돕는 개발 자동화 도구입니다. 반복되는 개발 작업을 에이전트 중심으로 넘길 때 쓰입니다.'},
-      {name:'ADK', icon:'🤖', domain:'개발·자동화', function:'개발·운영', usage:'에이전트 자동화', desc:'AI 에이전트를 설계하고 실행하기 위한 개발 도구 묶음입니다. 여러 단계를 스스로 처리하는 업무 자동화 구조를 만들 때 쓰입니다.'},
-      {name:'gcloud CLI', icon:'☁', domain:'개발·자동화', function:'개발·운영', usage:['업무용 도구 만들기','에이전트 자동화'], desc:'Google Cloud 리소스를 명령어로 관리하는 도구입니다. 배포, 설정, 운영 작업을 자동화하거나 재현 가능하게 만듭니다.'},
-      {name:'Gemma', icon:'GM', domain:'개발·자동화', function:'개발·운영', usage:'에이전트 자동화', desc:'Google의 오픈 모델 계열로, 로컬·커스텀 AI 실험에 쓰입니다. 가벼운 모델 비교나 내부 환경 테스트에 활용할 수 있습니다.'}
+      {name:'Gemini', icon:'✦', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'질문, 글쓰기, 요약, 번역, 아이디어 정리에 쓰는 기본 AI입니다. 업무 중 막히는 지점을 빠르게 풀어주는 출발점 역할을 합니다.'},
+      {name:'Gem', icon:'◆', domain:'Google AI', function:'설정 필요', usage:'자료 기반 생성', desc:'반복해서 쓰는 지시와 역할을 저장해 맞춤형 AI처럼 쓰는 도구입니다. 팀별 업무 규칙이나 개인 작업 방식에 맞춰 사용할 수 있습니다.'},
+      {name:'Gemini Live', icon:'◉', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'음성으로 실시간 대화하며 생각을 정리하는 방식의 AI입니다. 회의 전 준비, 설명 연습, 빠른 질의응답에 어울립니다.'},
+      {name:'Google AI Studio', icon:'AI', domain:'Google AI', function:'설정 필요', usage:'업무용 도구 만들기', desc:'Gemini 모델을 테스트하고 API 기반 프로토타입을 만드는 공간입니다. 프롬프트와 모델 반응을 실험한 뒤 개발로 연결할 수 있습니다.'},
+      {name:'AI Mode', icon:'⌕', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'검색 결과를 AI 답변 형태로 탐색하는 검색 경험입니다. 자료 조사 초반에 개념과 비교 포인트를 빠르게 잡을 수 있습니다.'},
+      {name:'Gemini in Chrome', icon:'🌐', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'브라우저에서 보고 있는 웹페이지 맥락을 활용하는 AI 보조 기능입니다. 페이지 요약, 비교, 다음 행동 정리에 적합합니다.'},
+      {name:'Deep Research', icon:'DR', domain:'리서치·학습', function:'학습 필요', usage:'자료 조사·아이디어 기획', desc:'복잡한 주제에 대해 여러 자료를 찾아 보고서 형태로 정리하는 리서치 기능입니다. 시장, 사례, 정책, 기술 비교처럼 깊이가 필요한 조사에 맞습니다.'},
+      {name:'NotebookLM', icon:'NB', domain:'리서치·학습', function:'설정 필요', usage:'자료 기반 생성', desc:'올려둔 자료를 기준으로 요약, 질의응답, 학습 정리를 해주는 도구입니다. 내부 문서나 긴 자료를 근거 기반으로 다시 읽을 때 유용합니다.'},
+      {name:'Disco', icon:'◌', domain:'앱·서비스', function:'학습 필요', usage:'업무용 도구 만들기', desc:'관심 주제와 관련된 자료를 발견하고 탐색하는 성격의 도구입니다. 조사 범위를 넓히거나 초기 아이디어를 찾을 때 쓸 수 있습니다.'},
+      {name:'Gmail AI', icon:'✉', domain:'Workspace', function:'바로 사용', usage:'회의·커뮤니케이션 정리', desc:'메일 초안, 답장, 요약을 도와주는 Gmail 안의 AI 기능입니다. 반복적인 커뮤니케이션 작성 시간을 줄이는 데 적합합니다.'},
+      {name:'Doc AI', icon:'DOC', domain:'Workspace', function:'바로 사용', usage:'문서·보고서·데이터', desc:'문서 초안 작성, 요약, 문장 다듬기를 도와주는 Docs 기반 AI입니다. 보고서나 안내문을 빠르게 정리할 때 쓸 수 있습니다.'},
+      {name:'Sheets AI', icon:'▦', domain:'Workspace', function:'바로 사용', usage:'문서·보고서·데이터', desc:'스프레드시트 안에서 표 정리, 함수, 데이터 해석을 돕는 AI입니다. 반복 입력과 간단한 분석 작업을 줄이는 데 좋습니다.'},
+      {name:'Slides AI', icon:'▣', domain:'Workspace', function:'바로 사용', usage:'제안서·발표 준비', desc:'슬라이드 초안, 구조, 발표 자료 생성을 보조하는 기능입니다. 문서나 아이디어를 발표용 흐름으로 바꾸는 데 쓰입니다.'},
+      {name:'Meet AI', icon:'🎙', domain:'Workspace', function:'바로 사용', usage:'회의·커뮤니케이션 정리', desc:'회의 내용을 요약하고 액션아이템을 정리하는 Meet 기반 AI입니다. 회의 후 정리와 공유 시간을 줄여줍니다.'},
+      {name:'Forms AI', icon:'⌁', domain:'Workspace', function:'바로 사용', usage:'회의·커뮤니케이션 정리', desc:'설문, 신청서, 피드백 폼의 문항 구성을 돕는 기능입니다. 응답 수집 구조를 빠르게 만들 때 유용합니다.'},
+      {name:'Workspace Studio', icon:'WS', domain:'Workspace', function:'조직 운영용', usage:'반복 업무 자동화', desc:'Workspace 안의 반복 업무를 자동화 흐름으로 만드는 도구입니다. 메일, 문서, 시트 작업을 조건과 실행으로 묶을 수 있습니다.'},
+      {name:'Workspace CLI', icon:'CLI', domain:'Workspace', function:'조직 운영용', usage:'에이전트 자동화', desc:'Workspace 작업을 명령어로 다루는 개발자용 인터페이스입니다. 문서, 계정, 파일 관련 반복 작업을 스크립트화할 때 쓰입니다.'},
+      {name:'Vids', icon:'▶', domain:'Workspace', function:'학습 필요', usage:'제안서·발표 준비', desc:'업무용 설명 영상과 안내 영상을 만드는 Google Workspace 도구입니다. 문서보다 영상이 더 빠른 전달 상황에 사용할 수 있습니다.'},
+      {name:'Nano Banana', icon:'🍌', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'홍보·마케팅', desc:'이미지 생성과 편집에 쓰이는 시각 제작 도구입니다. 제품 설명, 안내 이미지, 캠페인 소재처럼 눈에 보이는 결과물을 만들 때 맞습니다.'},
+      {name:'Flow', icon:'〰', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'홍보·마케팅', desc:'시나리오와 장면 흐름을 영상으로 만드는 생성형 영상 도구입니다. 짧은 홍보 영상이나 설명형 콘텐츠 초안에 활용할 수 있습니다.'},
+      {name:'Pomeli', icon:'✧', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'홍보·마케팅', desc:'브랜드와 마케팅 소재 제작에 가까운 콘텐츠 생성 도구입니다. 안내 이미지, 캠페인 시안, 홍보 문구와 비주얼을 함께 잡을 때 좋습니다.'},
+      {name:'Mixboard', icon:'◍', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'자료 조사·아이디어 기획', desc:'이미지와 레퍼런스를 모아 무드보드처럼 방향을 잡는 도구입니다. 디자인 톤, 캠페인 분위기, 시각 콘셉트를 정리할 때 유용합니다.'},
+      {name:'Text FL', icon:'T', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'자료 조사·아이디어 기획', desc:'텍스트 생성과 언어 실험에 가까운 도구로 볼 수 있습니다. 문장 변형, 카피 후보, 짧은 텍스트 실험에 활용할 수 있습니다.'},
+      {name:'AppSheet', icon:'APP', domain:'앱·서비스', function:'설정 필요', usage:'업무용 도구 만들기', desc:'스프레드시트 데이터를 기반으로 업무용 앱을 만드는 노코드 도구입니다. 점검, 신청, 관리, 현장 기록 앱을 빠르게 만들 수 있습니다.'},
+      {name:'Opal', icon:'◇', domain:'앱·서비스', function:'설정 필요', usage:'반복 업무 자동화', desc:'프롬프트와 간단한 구성을 바탕으로 AI 미니앱을 만드는 도구입니다. 사내 업무 보조 도구나 실험용 앱 프로토타입에 어울립니다.'},
+      {name:'Firebase', icon:'🔥', domain:'앱·서비스', function:'조직 운영용', usage:'업무용 도구 만들기', desc:'앱의 인증, 데이터베이스, 호스팅 같은 백엔드를 제공하는 플랫폼입니다. 실제 서비스로 이어지는 업무용 도구를 만들 때 필요합니다.'},
+      {name:'Stitch', icon:'ST', domain:'앱·서비스', function:'설정 필요', usage:'업무용 도구 만들기', desc:'앱 화면이나 UI 흐름을 빠르게 구성하는 도구로 볼 수 있습니다. 아이디어를 업무용 화면 초안으로 바꾸는 데 쓰입니다.'},
+      {name:'Apps Script', icon:'</>', domain:'개발·자동화', function:'설정 필요', usage:'반복 업무 자동화', desc:'Google Workspace 작업을 코드로 자동화하는 스크립트 도구입니다. 시트 처리, 메일 발송, 문서 생성 같은 반복 작업에 강합니다.'},
+      {name:'Antigravity', icon:'AG', domain:'개발·자동화', function:'훈련 필요', usage:'에이전트 자동화', desc:'AI 에이전트가 코드 작성, 실행, 검증 흐름을 함께 처리하도록 돕는 개발 자동화 도구입니다. 반복되는 개발 작업을 에이전트 중심으로 넘길 때 쓰입니다.'},
+      {name:'ADK', icon:'🤖', domain:'개발·자동화', function:'훈련 필요', usage:'에이전트 자동화', desc:'AI 에이전트를 설계하고 실행하기 위한 개발 도구 묶음입니다. 여러 단계를 스스로 처리하는 업무 자동화 구조를 만들 때 쓰입니다.'},
+      {name:'gcloud CLI', icon:'☁', domain:'개발·자동화', function:'조직 운영용', usage:['업무용 도구 만들기','에이전트 자동화'], desc:'Google Cloud 리소스를 명령어로 관리하는 도구입니다. 배포, 설정, 운영 작업을 자동화하거나 재현 가능하게 만듭니다.'},
+      {name:'Gemma', icon:'GM', domain:'개발·자동화', function:'훈련 필요', usage:'에이전트 자동화', desc:'Google의 오픈 모델 계열로, 로컬·커스텀 AI 실험에 쓰입니다. 가벼운 모델 비교나 내부 환경 테스트에 활용할 수 있습니다.'}
     ];
 
     tools.forEach((d, i) => d.id = i);
@@ -683,6 +684,9 @@
     function groupsFor(type) {
       const key = groupKey(type);
       let names = [...new Set(tools.flatMap(t => valuesFor(t, key)))];
+      if (type === 'function') {
+        names = levelOrder.filter(name => names.includes(name));
+      }
       if (type === 'usage') {
         names = usageOrder.filter(name => names.includes(name));
       }
@@ -691,8 +695,8 @@
     function allGroups() { return [...groupsFor('domain'), ...groupsFor('function'), ...groupsFor('usage')]; }
 
     function renderTaxonomy() {
-      const labels = { domain: '분야', function: '기능 구분', usage: '활용 방식' };
-      const codes = { domain: 'FIELD', function: 'FUNC', usage: 'USE' };
+      const labels = { domain: '분야', function: '사용 난이도', usage: '활용 방식' };
+      const codes = { domain: 'FIELD', function: 'LEVEL', usage: 'USE' };
       taxonomy.innerHTML = '';
       ['domain','function','usage'].forEach(type => {
         const col = document.createElement('div');
@@ -883,7 +887,7 @@
       const info = groupDescriptions[name] || ['🔗', name, '선택한 기준에 해당하는 도구가 공통 허브로 연결됩니다.'];
       groupNote.querySelector('.group-emoji').classList.remove('cue-click');
       groupNote.querySelector('.group-emoji').textContent = info[0];
-      groupNote.querySelector('.group-text strong').textContent = `${info[1]} · ${type === 'domain' ? '분야' : type === 'function' ? '기능 구분' : '활용 방식'} · ${info[2]}`;
+      groupNote.querySelector('.group-text strong').textContent = `${info[1]} · ${type === 'domain' ? '분야' : type === 'function' ? '사용 난이도' : '활용 방식'} · ${info[2]}`;
       groupNote.querySelector('.group-text p').textContent = '툴끼리 모두 엮지 않고, 선택한 기준에 속한 툴만 한 기준점으로 모아 보여줍니다.';
     }
 
@@ -897,7 +901,7 @@
     function renderComparison(type, name) {
       const key = groupKey(type);
       const items = tools.filter(t => valuesFor(t, key).includes(name));
-      const label = type === 'domain' ? '분야' : type === 'function' ? '기능 구분' : '활용 방식';
+      const label = type === 'domain' ? '분야' : type === 'function' ? '사용 난이도' : '활용 방식';
       tableTitle.textContent = `${name} 비교표`;
       tableDesc.textContent = `${label} 기준으로 묶인 ${items.length}개 도구가 실제 업무에서 어떻게 다르게 쓰이는지 비교합니다.`;
       const orderedItems = type === 'usage' && usageToolOrder[name]
@@ -909,7 +913,7 @@
         : items;
       tableWrap.innerHTML = `
         <table>
-          <thead><tr><th>툴</th><th>분야</th><th>기능 구분</th><th>활용 방식</th><th>구분 포인트</th></tr></thead>
+          <thead><tr><th>툴</th><th>분야</th><th>사용 난이도</th><th>활용 방식</th><th>구분 포인트</th></tr></thead>
           <tbody>${orderedItems.map(t => `
             <tr>
               <td>${t.name}${toolThumbHTML(t)}</td>
@@ -925,7 +929,7 @@
     function resetComparison() {
       tableTitle.textContent = '묶음별 툴 비교';
       tableDesc.textContent = '분류 항목을 클릭하면, 그 묶음 안에서 각 툴이 어떤 업무에 쓰이는지 비교표로 바뀝니다.';
-      tableWrap.innerHTML = '<div class="empty-state">오른쪽 상단의 <strong>분야</strong>, <strong>기능 구분</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.</div>';
+      tableWrap.innerHTML = '<div class="empty-state">오른쪽 상단의 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.</div>';
     }
 
     function activateGroup(type, name) {
