@@ -215,6 +215,13 @@
     }
     .tax-chip.domain-chip { border-color: color-mix(in srgb, var(--chip-color) 55%, rgba(32,33,36,.12)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chip-color) 18%, transparent); }
     .tax-chip.domain-chip:before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--chip-color); box-shadow: 0 0 12px color-mix(in srgb, var(--chip-color) 60%, transparent); vertical-align: 1px; }
+    .tax-chip.level-chip {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--level-color) 23%, white) 0%, color-mix(in srgb, var(--level-next) 30%, white) 100%);
+      border-color: color-mix(in srgb, var(--level-color) 58%, rgba(32,33,36,.12));
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--level-next) 22%, transparent), 0 6px 16px color-mix(in srgb, var(--level-color) 16%, transparent);
+    }
+    .tax-chip.level-chip:before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--level-color), var(--level-next)); box-shadow: 0 0 12px color-mix(in srgb, var(--level-color) 54%, transparent); vertical-align: 1px; }
+    .tax-chip.level-chip.hot { color: #202124; background: linear-gradient(135deg, var(--level-color), var(--level-next)); border-color: transparent; box-shadow: 0 12px 28px color-mix(in srgb, var(--level-color) 32%, transparent); }
 
     .viz-wrap {
       position: relative;
@@ -557,6 +564,13 @@
     };
 
     const levelOrder = ['바로 사용', '설정 필요', '학습 필요', '훈련 필요', '조직 운영용'];
+    const levelColors = {
+      '바로 사용': ['#4285F4', '#34A853'],
+      '설정 필요': ['#34A853', '#FBBC04'],
+      '학습 필요': ['#FBBC04', '#F29900'],
+      '훈련 필요': ['#F29900', '#EA4335'],
+      '조직 운영용': ['#EA4335', '#A142F4']
+    };
 
     const usageOrder = ['일상 업무 보조', '자료 기반 생성', '자료 조사·아이디어 기획', '문서·보고서·데이터', '회의·커뮤니케이션 정리', '제안서·발표 준비', '홍보·마케팅', '반복 업무 자동화', '업무용 도구 만들기', '에이전트 자동화'];
     const usageToolOrder = {
@@ -692,7 +706,7 @@
       }
       return names.map(name => ({ type, name, items: tools.filter(t => valuesFor(t, key).includes(name)) }));
     }
-    function allGroups() { return [...groupsFor('domain'), ...groupsFor('function'), ...groupsFor('usage')]; }
+    function allGroups() { return [...groupsFor('domain'), ...groupsFor('usage')]; }
 
     function renderTaxonomy() {
       const labels = { domain: '분야', function: '사용 난이도', usage: '활용 방식' };
@@ -705,11 +719,16 @@
         const items = col.querySelector('.tax-items');
         groupsFor(type).forEach(g => {
           const b = document.createElement('button');
-          b.className = `tax-chip ${type === 'domain' ? 'domain-chip' : ''}`;
+          b.className = `tax-chip ${type === 'domain' ? 'domain-chip' : ''} ${type === 'function' ? 'level-chip' : ''}`;
           b.textContent = g.name;
           b.dataset.type = type;
           b.dataset.name = g.name;
           if (type === 'domain') b.style.setProperty('--chip-color', domainColors[g.name]);
+          if (type === 'function') {
+            const [start, end] = levelColors[g.name] || ['#4285F4', '#34A853'];
+            b.style.setProperty('--level-color', start);
+            b.style.setProperty('--level-next', end);
+          }
           b.addEventListener('click', () => activateGroup(type, g.name));
           items.appendChild(b);
         });
@@ -935,9 +954,18 @@
     function activateGroup(type, name) {
       active = { type, name };
       taxonomy.classList.remove('attract');
-      updateGroupNote(type, name);
       renderComparison(type, name);
       document.querySelectorAll('.tax-chip').forEach(c => c.classList.toggle('hot', c.dataset.type === type && c.dataset.name === name));
+
+      if (type === 'function') {
+        resetGroupNote();
+        document.querySelectorAll('.edge').forEach(edge => edge.classList.remove('visible','faint'));
+        document.querySelectorAll('.edge-hub').forEach(hub => hub.classList.remove('visible'));
+        document.querySelectorAll('.node').forEach(node => node.classList.remove('hot','dimmed'));
+        return;
+      }
+
+      updateGroupNote(type, name);
       document.querySelectorAll('.edge').forEach(edge => {
         const isHot = edge.dataset.type === type && edge.dataset.name === name;
         edge.classList.toggle('visible', isHot);
