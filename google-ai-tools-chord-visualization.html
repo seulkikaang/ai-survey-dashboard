@@ -706,7 +706,7 @@
       }
       return names.map(name => ({ type, name, items: tools.filter(t => valuesFor(t, key).includes(name)) }));
     }
-    function allGroups() { return [...groupsFor('domain'), ...groupsFor('usage')]; }
+    function allGroups() { return [...groupsFor('domain'), ...groupsFor('function'), ...groupsFor('usage')]; }
 
     function renderTaxonomy() {
       const labels = { domain: '분야', function: '사용 난이도', usage: '활용 방식' };
@@ -959,13 +959,10 @@
 
       if (type === 'function') {
         resetGroupNote();
-        document.querySelectorAll('.edge').forEach(edge => edge.classList.remove('visible','faint'));
-        document.querySelectorAll('.edge-hub').forEach(hub => hub.classList.remove('visible'));
-        document.querySelectorAll('.node').forEach(node => node.classList.remove('hot','dimmed'));
-        return;
+      } else {
+        updateGroupNote(type, name);
       }
 
-      updateGroupNote(type, name);
       document.querySelectorAll('.edge').forEach(edge => {
         const isHot = edge.dataset.type === type && edge.dataset.name === name;
         edge.classList.toggle('visible', isHot);
