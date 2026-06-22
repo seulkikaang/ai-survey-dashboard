@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google AI 업무 도구 분류 맵</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f1e7;
+      --panel: rgba(255,255,255,.76);
+      --panel-strong: rgba(255,255,255,.92);
+      --surface: rgba(32,33,36,.045);
+      --surface-hover: rgba(66,133,244,.08);
+      --border: rgba(32,33,36,.12);
+      --border-soft: rgba(32,33,36,.075);
+      --text: #202124;
+      --soft: #3c4043;
+      --muted: #5f6368;
+      --dim: #80868b;
+      --white-line: rgba(60,64,67,.92);
+      --google-blue: #4285F4;
+      --google-red: #EA4335;
+      --google-yellow: #FBBC04;
+      --google-green: #34A853;
+      --google-purple: #A142F4;
+      --google-teal: #00ACC1;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; min-height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Inter', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+      font-feature-settings: "cv01", "ss03";
+      color: var(--text);
+      background:
+        radial-gradient(circle at 44% 43%, rgba(66,133,244,.10), transparent 25%),
+        radial-gradient(circle at 14% 84%, rgba(52,168,83,.08), transparent 28%),
+        radial-gradient(circle at 92% 18%, rgba(251,188,4,.045), transparent 24%),
+        linear-gradient(135deg, #faf7ef 0%, #f5f1e8 54%, #eee8dd 100%);
+    }
+
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; opacity: .14;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.38'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+    }
+
+    .app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      padding: 22px 28px 26px;
+      display: grid;
+      grid-template-columns: minmax(620px, .88fr) minmax(560px, 660px);
+      grid-template-rows: auto 1fr;
+      gap: 16px;
+    }
+
+    .header {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 28px;
+      z-index: 6;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      color: #3c4043;
+      font: 500 11px/1 'JetBrains Mono', monospace;
+      letter-spacing: .02em;
+    }
+    .kicker-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--google-green); box-shadow: 0 0 0 4px rgba(52,168,83,.13), 0 0 18px rgba(52,168,83,.32); }
+
+    h1 {
+      margin: 12px 0 7px;
+      font-size: clamp(30px, 2.9vw, 46px);
+      line-height: 1.02;
+      letter-spacing: -1.15px;
+      font-weight: 510;
+      white-space: nowrap;
+    }
+    .subtitle {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+    .course-banner {
+      margin-top: 12px;
+      max-width: 780px;
+      display: grid;
+      grid-template-columns: 132px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(66,133,244,.22);
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(255,255,255,.90), rgba(246,240,230,.84));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.88), 0 16px 42px rgba(64,49,24,.10);
+    }
+    .course-banner img {
+      width: 132px;
+      height: 74px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(32,33,36,.10);
+      background: #fff;
+    }
+    .course-banner__eyebrow {
+      margin: 0 0 3px;
+      color: #174ea6;
+      font: 800 11px/1 'Inter','Noto Sans KR',sans-serif;
+      letter-spacing: -.05px;
+    }
+    .course-banner__title {
+      margin: 0;
+      color: #202124;
+      font: 850 16px/1.22 'Inter','Noto Sans KR',sans-serif;
+      letter-spacing: -.35px;
+      word-break: keep-all;
+    }
+    .course-banner__desc {
+      margin: 5px 0 0;
+      color: #5f6368;
+      font-size: 12px;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+    .course-banner__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 108px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #1a73e8;
+      color: #fff;
+      text-decoration: none;
+      font: 850 12px/1 'Inter','Noto Sans KR',sans-serif;
+      box-shadow: 0 12px 26px rgba(26,115,232,.20);
+      white-space: nowrap;
+    }
+    .course-banner__cta:hover { background: #174ea6; }
+
+    .top-taxonomy {
+      width: min(780px, 54vw);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid rgba(66,133,244,.24);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fffefa 0%, #f6f0e6 100%);
+      color: #202124;
+      backdrop-filter: blur(18px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.86), 0 18px 60px rgba(0,0,0,.26), 0 0 0 1px rgba(251,188,4,.12);
+      transition: box-shadow .22s ease, border-color .22s ease, transform .22s ease;
+    }
+    .top-taxonomy.attract {
+      animation: taxonomyGlow 1.45s ease-in-out infinite;
+    }
+    .top-taxonomy:hover {
+      border-color: rgba(66,133,244,.62);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 0 0 2px rgba(66,133,244,.20), 0 20px 70px rgba(66,133,244,.18);
+    }
+    @keyframes taxonomyGlow {
+      0%,100% { transform: translateY(0); box-shadow: inset 0 1px 0 rgba(255,255,255,.86), 0 18px 60px rgba(0,0,0,.26), 0 0 0 rgba(66,133,244,0); }
+      50% { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 18px 60px rgba(0,0,0,.26), 0 0 0 3px rgba(66,133,244,.22), 0 0 38px rgba(251,188,4,.28); }
+    }
+    .tax-col { min-width: 0; }
+    .tax-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 2px 3px 8px;
+      color: #202124;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -.1px;
+    }
+    .tax-head code { color: #5f6368; font: 500 10px/1 'JetBrains Mono', monospace; }
+    .tax-items { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tax-chip {
+      appearance: none;
+      border: 1px solid rgba(32,33,36,.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      color: #3c4043;
+      padding: 6px 8px;
+      max-width: 100%;
+      font: 700 10.5px/1 'Inter','Noto Sans KR',sans-serif;
+      cursor: pointer;
+      transition: background .18s ease, color .18s ease, border .18s ease, transform .18s ease, box-shadow .18s ease;
+      white-space: nowrap;
+    }
+    .tax-chip:hover, .tax-chip.hot {
+      color: #174ea6;
+      background: #fff;
+      border-color: rgba(66,133,244,.46);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(66,133,244,.18);
+    }
+    .tax-chip.domain-chip { border-color: color-mix(in srgb, var(--chip-color) 55%, rgba(32,33,36,.12)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chip-color) 18%, transparent); }
+    .tax-chip.domain-chip:before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--chip-color); box-shadow: 0 0 12px color-mix(in srgb, var(--chip-color) 60%, transparent); vertical-align: 1px; }
+
+    .viz-wrap {
+      position: relative;
+      min-width: 0; min-height: 0;
+      border: 1px solid rgba(32,33,36,.10);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(255,255,255,.70), transparent 30%),
+        radial-gradient(circle at 50% 51%, rgba(66,133,244,.08), transparent 43%),
+        linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.34));
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72), inset 0 0 86px rgba(66,133,244,.06), 0 30px 90px rgba(64,49,24,.14);
+    }
+    svg { width: 100%; height: 100%; display: block; }
+
+    .group-note {
+      position: absolute;
+      left: 50%; top: 12px;
+      transform: translateX(-50%);
+      width: min(720px, calc(100% - 100px));
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 13px;
+      border-radius: 20px;
+      border: 1px solid rgba(251,188,4,.42);
+      background: linear-gradient(180deg, #fffefa 0%, #f6f0e6 100%);
+      color: #202124;
+      backdrop-filter: blur(18px);
+      pointer-events: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.88), 0 22px 70px rgba(0,0,0,.30), 0 0 0 1px rgba(66,133,244,.12);
+      z-index: 4;
+    }
+    .group-emoji {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid rgba(66,133,244,.22);
+      color: #174ea6;
+      font-size: 19px;
+      box-shadow: 0 10px 26px rgba(66,133,244,.18);
+    }
+    .group-emoji.cue-click {
+      animation: clickFloat 1.55s ease-in-out infinite;
+    }
+    .group-text strong { display: block; margin: 0; color: #202124; font-size: 14px; font-weight: 850; letter-spacing: -.2px; line-height: 1.28; word-break: keep-all; }
+    .group-text p { display: block; margin: 3px 0 0; color: #3c4043; font-size: 11.5px; font-weight: 650; line-height: 1.35; word-break: keep-all; }
+    @keyframes clickFloat {
+      0%, 100% { transform: translateY(0) rotate(-7deg); }
+      50% { transform: translateY(-7px) rotate(6deg); }
+    }
+
+    .grid-ring { fill: none; stroke: rgba(32,33,36,.08); stroke-width: 1; }
+    .ray { stroke: rgba(32,33,36,.045); stroke-width: 1; }
+    .domain-arc { fill: none; stroke-width: 11; stroke-linecap: round; opacity: .9; filter: drop-shadow(0 0 10px currentColor); }
+    .domain-label-bg { fill: rgba(255,253,247,.92); stroke: rgba(32,33,36,.13); stroke-width: 1; }
+    .domain-label-text { fill: #202124; font-size: 11px; font-weight: 800; letter-spacing: -.08px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .domain-label-dot { stroke: rgba(32,33,36,.20); stroke-width: 1; }
+
+    .edge {
+      fill: none;
+      stroke-linecap: round;
+      mix-blend-mode: screen;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, stroke-width .2s ease, filter .2s ease;
+    }
+    .edge.visible {
+      opacity: .78;
+      stroke: rgba(60,64,67,.58) !important;
+      stroke-width: 3.4 !important;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,.55));
+      mix-blend-mode: multiply;
+    }
+    .edge.faint { opacity: .12; }
+    .edge-hub {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .edge-hub.visible { opacity: .9; }
+    .edge-hub circle {
+      fill: #fffdf7;
+      stroke: rgba(60,64,67,.54);
+      stroke-width: 1.6;
+      filter: drop-shadow(0 2px 8px rgba(60,64,67,.14));
+    }
+    .edge-hub .hub-dot { fill: var(--hub-color, #5f6368); stroke: rgba(255,255,255,.92); stroke-width: 1.4; }
+
+    .node { cursor: pointer; }
+    .node circle.core { fill: #fffdf7; stroke: rgba(32,33,36,.26); stroke-width: 1.1; transition: .18s ease; }
+    .node circle.ring { fill: none; stroke-width: 2.9; stroke-linecap: round; opacity: .98; transition: .18s ease; }
+    .node text.icon { fill: #202124; font-size: 11px; font-weight: 800; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .node text.label { fill: rgba(32,33,36,.78); font-size: 9.2px; font-weight: 650; letter-spacing: -.08px; pointer-events: none; transition: .18s ease; }
+    .node:hover circle.core, .node.hot circle.core { r: 16; fill: #fff; stroke: rgba(66,133,244,.48); filter: url(#nodeGlow); }
+    .node:hover circle.ring, .node.hot circle.ring { stroke-width: 4.2; filter: url(#softGlow); }
+    .node:hover text.label, .node.hot text.label { fill: #174ea6; }
+    .node.dimmed { opacity: .35; }
+
+
+    .side-panel {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,253,247,.92), rgba(248,241,228,.78));
+      backdrop-filter: blur(18px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.86), 0 24px 80px rgba(64,49,24,.14);
+      overflow: hidden;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .side-head { padding: 18px 18px 12px; border-bottom: 1px solid rgba(255,255,255,.055); }
+    .side-kicker { color: var(--dim); font: 400 10px/1 'JetBrains Mono', monospace; letter-spacing: .03em; margin-bottom: 8px; text-transform: uppercase; }
+    .side-title { margin: 0; font-size: 19px; line-height: 1.15; font-weight: 700; letter-spacing: -.34px; }
+    .side-desc { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; word-break: keep-all; }
+
+    .table-wrap { overflow: auto; padding: 14px; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0 7px; }
+    th { color: var(--dim); font-size: 10px; font-weight: 700; text-align: left; padding: 0 8px 2px; white-space: nowrap; }
+    td {
+      vertical-align: top;
+      padding: 10px 8px;
+      background: rgba(255,255,255,.64);
+      border-top: 1px solid rgba(32,33,36,.08);
+      border-bottom: 1px solid rgba(32,33,36,.08);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.42;
+      word-break: keep-all;
+    }
+    tr td:first-child { border-left: 1px solid rgba(32,33,36,.08); border-radius: 12px 0 0 12px; color: var(--text); font-weight: 800; min-width: 118px; }
+    tr td:last-child { border-right: 1px solid rgba(32,33,36,.08); border-radius: 0 12px 12px 0; }
+    .pill { display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(32,33,36,.10); border-radius: 999px; padding: 4px 7px; color: var(--soft); background: rgba(255,255,255,.70); white-space: nowrap; }
+    .empty-state { padding: 26px 18px; color: var(--muted); font-size: 13px; line-height: 1.55; word-break: keep-all; }
+    .tool-thumb {
+      position: relative;
+      height: 132px;
+      margin-top: 10px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      background: #0b0c0f;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+      cursor: zoom-in;
+    }
+    .tool-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: radial-gradient(circle at 74% 26%, color-mix(in srgb, var(--tool-color) 22%, transparent), transparent 28%), #0b0c0f;
+    }
+    .tool-detail { padding: 14px; }
+    .tool-detail-hero { height: 310px; border-radius: 22px; margin-bottom: 16px; }
+    .tool-detail h3 { margin: 0 0 10px; font-size: 25px; line-height: 1; letter-spacing: -.45px; }
+    .tool-detail p { margin: 0; color: var(--soft); font-size: 13px; line-height: 1.58; word-break: keep-all; }
+    .detail-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 14px; }
+    .detail-tags span { padding: 7px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04); color: var(--muted); font-size: 11px; font-weight: 510; }
+
+
+    .image-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 34px;
+      background: rgba(0,0,0,.78);
+      backdrop-filter: blur(18px);
+    }
+    .image-lightbox.open { display: flex; }
+    .image-lightbox__inner {
+      width: min(1180px, 94vw);
+      max-height: 92vh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 12px;
+    }
+    .image-lightbox__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--soft);
+      font-size: 13px;
+    }
+    .image-lightbox__close {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+      font: 700 12px/1 'Inter','Noto Sans KR',sans-serif;
+    }
+    .image-lightbox__image {
+      max-width: 100%;
+      max-height: calc(92vh - 52px);
+      object-fit: contain;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: #0b0c0f;
+      box-shadow: 0 28px 110px rgba(0,0,0,.55);
+    }
+
+
+
+    .pointer-cue {
+      position: absolute;
+      z-index: 9;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(66,133,244,.42);
+      background: rgba(255,255,255,.98);
+      color: #174ea6;
+      font: 900 13px/1 'Inter','Noto Sans KR',sans-serif;
+      box-shadow: 0 16px 34px rgba(66,133,244,.20), 0 0 0 3px rgba(66,133,244,.10), inset 0 1px 0 rgba(255,255,255,.94);
+      pointer-events: none;
+      animation: pointerFloat 1.35s ease-in-out infinite;
+    }
+    .pointer-cue__icon { font-size: 23px; line-height: 1; display: inline-block; }
+    .pointer-cue--taxonomy { right: 22px; top: 104px; }
+    .pointer-cue--taxonomy .pointer-cue__icon { transform: rotate(-28deg); }
+    .pointer-cue--tools { left: 28px; top: 318px; }
+    .pointer-cue--tools .pointer-cue__icon { transform: rotate(72deg); }
+    .pointer-cue:after,
+    .pointer-cue:before { display: none; content: none; }
+    @keyframes pointerFloat {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -10px; }
+    }
+
+    .signature { position: absolute; right: 24px; bottom: 18px; color: rgba(208,214,224,.34); font: 400 10px/1 'JetBrains Mono', monospace; letter-spacing: .02em; pointer-events: none; }
+
+    @media (max-width: 1200px) {
+      body { overflow: auto; }
+      .app { height: auto; min-height: 100vh; grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+      .header { flex-direction: column; }
+      .top-taxonomy { width: 100%; }
+      .viz-wrap { height: 780px; }
+      .side-panel { min-height: 520px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <main class="app">
+    <header class="header">
+      <div>
+        <div class="kicker"><span class="kicker-dot"></span> GOOGLE AI WORK TOOL MAP</div>
+        <h1>Google AI 업무 도구 분류 맵</h1>
+        <p class="subtitle">Google AI, Workspace, 개발·자동화 도구를 <strong>분야</strong>, <strong>기능 구분</strong>, <strong>활용 방식</strong>으로 비교해 보는 인터랙티브 관계도입니다.</p>
+        <div class="course-banner" aria-label="일잘러를 위한 구글 AI 생태계 바이블 강의 배너">
+          <img src="https://seulkikaang.github.io/ai-survey-dashboard/google-banner-clean-text-v1.png" alt="일잘러를 위한 구글 AI 생태계 바이블 배너 이미지" loading="lazy">
+          <div>
+            <p class="course-banner__eyebrow">일잘러를 위한 구글 AI 생태계 바이블</p>
+            <p class="course-banner__title">워크스페이스 연동부터 콘텐츠·서비스 자동화까지 w. only 구글</p>
+            <p class="course-banner__desc">Gemini를 포함한 구글 AI 생태계 전체를 실무에 적용하는 방법을 배워보세요. 워크스페이스 연동, 콘텐츠 자동화, 서비스 구축까지 구글만으로 완성하는 AI 업무 자동화 강의입니다.</p>
+          </div>
+          <a class="course-banner__cta" href="https://fastcampus.co.kr/biz_online_googlebible?utm_source=kakao&amp;utm_medium=viral&amp;utm_campaign=prd^260323^260612&amp;utm_content=teacher^260612" target="_blank" rel="noopener noreferrer">강의 자세히 보기</a>
+        </div>
+      </div>
+      <section class="top-taxonomy attract" id="taxonomy" aria-label="분류 항목"></section>
+      <div class="pointer-cue pointer-cue--taxonomy"><span class="pointer-cue__icon">👆</span><span>분류칩 클릭</span></div>
+    </header>
+
+    <section class="viz-wrap" aria-label="Google AI tool relationship map">
+      <div class="group-note" id="groupNote">
+        <div class="group-emoji">🧭</div>
+        <div class="group-text">
+          <strong>분류칩이나 툴을 클릭하면 관계가 열립니다</strong>
+          <p>오른쪽 상단 상자와 원형 툴 노드에서 원하는 기준을 선택하세요.</p>
+        </div>
+      </div>
+
+      <div class="pointer-cue pointer-cue--tools"><span class="pointer-cue__icon">👆</span><span>툴 원 클릭</span></div>
+
+      <svg id="viz" viewBox="0 0 960 860" role="img">
+        <defs>
+          <filter id="softGlow" x="-45%" y="-45%" width="190%" height="190%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .65 0" result="glow" />
+            <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="nodeGlow" x="-70%" y="-70%" width="240%" height="240%">
+            <feGaussianBlur stdDeviation="7" result="blur" />
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <g id="rings"></g>
+        <g id="domainArcs"></g>
+        <g id="edges"></g>
+        <g id="nodes"></g>
+        <g id="domainLabels"></g>
+      </svg>
+
+      <div class="signature">click a taxonomy chip or a tool node</div>
+    </section>
+
+    <aside class="side-panel" aria-label="비교 표">
+      <div class="side-head">
+        <div class="side-kicker">COMPARISON TABLE</div>
+        <h2 class="side-title" id="tableTitle">묶음별 툴 비교</h2>
+        <p class="side-desc" id="tableDesc">분류 항목을 클릭하면, 그 묶음 안에서 각 툴이 어떤 업무에 쓰이는지 비교표로 바뀝니다.</p>
+      </div>
+      <div class="table-wrap" id="tableWrap">
+        <div class="empty-state">오른쪽 상단의 <strong>분야</strong>, <strong>기능 구분</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.</div>
+      </div>
+    </aside>
+  </main>
+
+
+  <div class="image-lightbox" id="imageLightbox" aria-hidden="true">
+    <div class="image-lightbox__inner">
+      <div class="image-lightbox__bar"><span id="imageLightboxCaption">이미지 확대 보기</span><button type="button" class="image-lightbox__close" id="imageLightboxClose">닫기</button></div>
+      <img class="image-lightbox__image" id="imageLightboxImage" alt="">
+    </div>
+  </div>
+
+  <script>
+    const domainOrder = ['Google AI', '리서치·학습', 'Workspace', '이미지·영상·콘텐츠', '앱·서비스', '개발·자동화'];
+    const domainColors = {
+      'Google AI': '#4285F4',
+      'Workspace': '#188038',
+      '리서치·학습': '#0097C2',
+      '이미지·영상·콘텐츠': '#FBBC04',
+      '앱·서비스': '#EA4335',
+      '개발·자동화': '#A142F4'
+    };
+
+    const usageOrder = ['일상 업무 보조', '자료 기반 생성', '자료 조사·아이디어 기획', '문서·보고서·데이터', '회의·커뮤니케이션 정리', '제안서·발표 준비', '홍보·마케팅', '반복 업무 자동화', '업무용 도구 만들기', '에이전트 자동화'];
+    const usageToolOrder = {
+      '일상 업무 보조': ['Gemini', 'Gemini Live', 'Gemini in Chrome', 'AI Mode'],
+      '자료 기반 생성': ['Gem', 'NotebookLM'],
+      '자료 조사·아이디어 기획': ['Deep Research', 'Mixboard', 'Text FL'],
+      '문서·보고서·데이터': ['Doc AI', 'Sheets AI'],
+      '회의·커뮤니케이션 정리': ['Meet AI', 'Forms AI', 'Gmail AI'],
+      '제안서·발표 준비': ['Slides AI', 'Vids'],
+      '홍보·마케팅': ['Nano Banana', 'Flow', 'Pomeli'],
+      '반복 업무 자동화': ['Opal', 'Workspace Studio', 'Apps Script'],
+      '업무용 도구 만들기': ['AppSheet', 'Disco', 'Google AI Studio', 'Firebase', 'gcloud CLI', 'Stitch'],
+      '에이전트 자동화': ['Antigravity', 'ADK', 'gcloud CLI', 'Workspace CLI', 'Gemma']
+    };
+
+    const groupDescriptions = {
+      'Google AI': ['🧠', 'Google AI', 'Gemini를 중심으로 검색, 브라우저, 실시간 대화, 모델 실험까지 이어지는 범용 AI 사용 영역입니다.'],
+      '리서치·학습': ['📚', '리서치·학습', '자료를 모으고 읽고 비교해서 의사결정 전 단계의 근거를 만드는 도구 묶음입니다.'],
+      'Workspace': ['💼', 'Workspace', '메일, 문서, 시트, 회의, 발표처럼 매일 쓰는 업무 표면에 AI가 붙은 영역입니다.'],
+      '이미지·영상·콘텐츠': ['🎬', '이미지·영상·콘텐츠', '텍스트를 넘어 이미지, 영상, 무드보드, 홍보 소재처럼 보여주는 결과물을 만드는 영역입니다.'],
+      '앱·서비스': ['🧩', '앱·서비스', '시트 기반 앱, AI 미니앱, UI, 백엔드처럼 업무용 도구를 서비스 형태로 만드는 묶음입니다.'],
+      '개발·자동화': ['⚙️', '개발·자동화', '스크립트, CLI, 에이전트, 오픈 모델로 반복 업무와 시스템 운영을 자동화하는 영역입니다.'],
+      '범용 생성·대화': ['💬', '범용 생성·대화', '질문, 글쓰기, 요약, 설명처럼 대부분의 사무 업무에서 출발점이 되는 대화형 AI 기능입니다.'],
+      '심층 조사·자료 이해': ['🔎', '심층 조사·자료 이해', '자료를 읽고 연결하고 근거를 정리해 조사, 비교, 기획의 품질을 높이는 기능입니다.'],
+      '문서·협업 보조': ['📝', '문서·협업 보조', '메일, 문서, 시트, 회의, 발표 등 협업 문서 흐름을 빠르게 만드는 기능입니다.'],
+      '이미지·영상 생성': ['🖼️', '이미지·영상 생성', '이미지, 영상, 무드보드, 브랜드 소재처럼 시각 결과물을 빠르게 만드는 기능입니다.'],
+      '자동화·앱 제작': ['🛠️', '자동화·앱 제작', '반복 작업을 플로우로 묶거나, 업무용 앱과 미니도구로 바꾸는 기능입니다.'],
+      '개발·운영': ['☁️', '개발·운영', '모델 테스트, 배포, 백엔드, CLI 운영처럼 개발자·운영자 영역에 가까운 기능입니다.'],
+      '일상 업무 보조': ['✨', '일상 업무 보조', '업무 중 생기는 질문, 초안, 요약, 설명, 검색 보조를 바로 처리하는 활용 방식입니다.'],
+      '자료 기반 생성': ['📚', '자료 기반 생성', '내가 준 자료나 정해둔 지식을 기준으로 답변, 초안, 요약을 만드는 활용 방식입니다.'],
+      '자료 조사·아이디어 기획': ['🧭', '자료 조사·아이디어 기획', '새 주제 탐색, 자료 검토, 사례 비교, 아이디어 정리에 쓰이는 활용 방식입니다.'],
+      '문서·보고서·데이터': ['📄', '문서·보고서·데이터', '문서, 보고서, 표, 데이터 입력값을 만들고 정리하는 활용 방식입니다.'],
+      '회의·커뮤니케이션 정리': ['🤝', '회의·커뮤니케이션 정리', '회의 내용, 메일, 설문, 커뮤니케이션 흐름을 기록하고 정돈하는 활용 방식입니다.'],
+      '제안서·발표 준비': ['📽️', '제안서·발표 준비', '슬라이드, 설명 영상, 제안 자료처럼 전달용 산출물을 준비하는 활용 방식입니다.'],
+      '홍보·마케팅': ['📣', '홍보·마케팅', '캠페인 소재, 홍보 문구, 시각 콘텐츠처럼 외부에 보여줄 자료를 만드는 활용 방식입니다.'],
+      '반복 업무 자동화': ['🔁', '반복 업무 자동화', '매번 손으로 하던 메일, 시트, 문서, 승인, 정리 작업을 자동 흐름으로 바꾸는 활용 방식입니다.'],
+      '업무용 도구 만들기': ['🧱', '업무용 도구 만들기', '팀이 직접 쓰는 신청, 점검, 관리, 조회 도구를 빠르게 만드는 활용 방식입니다.'],
+      '에이전트 자동화': ['🤖', '에이전트 자동화', '여러 단계를 스스로 처리하는 에이전트, CLI, 개발 자동화 흐름을 만드는 활용 방식입니다.']
+    };
+
+    const tools = [
+      {name:'Gemini', icon:'✦', domain:'Google AI', function:'범용 생성·대화', usage:'일상 업무 보조', desc:'질문, 글쓰기, 요약, 번역, 아이디어 정리에 쓰는 기본 AI입니다. 업무 중 막히는 지점을 빠르게 풀어주는 출발점 역할을 합니다.'},
+      {name:'Gem', icon:'◆', domain:'Google AI', function:'범용 생성·대화', usage:'자료 기반 생성', desc:'반복해서 쓰는 지시와 역할을 저장해 맞춤형 AI처럼 쓰는 도구입니다. 팀별 업무 규칙이나 개인 작업 방식에 맞춰 사용할 수 있습니다.'},
+      {name:'Gemini Live', icon:'◉', domain:'Google AI', function:'범용 생성·대화', usage:'일상 업무 보조', desc:'음성으로 실시간 대화하며 생각을 정리하는 방식의 AI입니다. 회의 전 준비, 설명 연습, 빠른 질의응답에 어울립니다.'},
+      {name:'Google AI Studio', icon:'AI', domain:'Google AI', function:'개발·운영', usage:'업무용 도구 만들기', desc:'Gemini 모델을 테스트하고 API 기반 프로토타입을 만드는 공간입니다. 프롬프트와 모델 반응을 실험한 뒤 개발로 연결할 수 있습니다.'},
+      {name:'AI Mode', icon:'⌕', domain:'Google AI', function:'심층 조사·자료 이해', usage:'일상 업무 보조', desc:'검색 결과를 AI 답변 형태로 탐색하는 검색 경험입니다. 자료 조사 초반에 개념과 비교 포인트를 빠르게 잡을 수 있습니다.'},
+      {name:'Gemini in Chrome', icon:'🌐', domain:'Google AI', function:'범용 생성·대화', usage:'일상 업무 보조', desc:'브라우저에서 보고 있는 웹페이지 맥락을 활용하는 AI 보조 기능입니다. 페이지 요약, 비교, 다음 행동 정리에 적합합니다.'},
+      {name:'Deep Research', icon:'DR', domain:'리서치·학습', function:'심층 조사·자료 이해', usage:'자료 조사·아이디어 기획', desc:'복잡한 주제에 대해 여러 자료를 찾아 보고서 형태로 정리하는 리서치 기능입니다. 시장, 사례, 정책, 기술 비교처럼 깊이가 필요한 조사에 맞습니다.'},
+      {name:'NotebookLM', icon:'NB', domain:'리서치·학습', function:'심층 조사·자료 이해', usage:'자료 기반 생성', desc:'올려둔 자료를 기준으로 요약, 질의응답, 학습 정리를 해주는 도구입니다. 내부 문서나 긴 자료를 근거 기반으로 다시 읽을 때 유용합니다.'},
+      {name:'Disco', icon:'◌', domain:'리서치·학습', function:'심층 조사·자료 이해', usage:'업무용 도구 만들기', desc:'관심 주제와 관련된 자료를 발견하고 탐색하는 성격의 도구입니다. 조사 범위를 넓히거나 초기 아이디어를 찾을 때 쓸 수 있습니다.'},
+      {name:'Gmail AI', icon:'✉', domain:'Workspace', function:'문서·협업 보조', usage:'회의·커뮤니케이션 정리', desc:'메일 초안, 답장, 요약을 도와주는 Gmail 안의 AI 기능입니다. 반복적인 커뮤니케이션 작성 시간을 줄이는 데 적합합니다.'},
+      {name:'Doc AI', icon:'DOC', domain:'Workspace', function:'문서·협업 보조', usage:'문서·보고서·데이터', desc:'문서 초안 작성, 요약, 문장 다듬기를 도와주는 Docs 기반 AI입니다. 보고서나 안내문을 빠르게 정리할 때 쓸 수 있습니다.'},
+      {name:'Sheets AI', icon:'▦', domain:'Workspace', function:'문서·협업 보조', usage:'문서·보고서·데이터', desc:'스프레드시트 안에서 표 정리, 함수, 데이터 해석을 돕는 AI입니다. 반복 입력과 간단한 분석 작업을 줄이는 데 좋습니다.'},
+      {name:'Slides AI', icon:'▣', domain:'Workspace', function:'문서·협업 보조', usage:'제안서·발표 준비', desc:'슬라이드 초안, 구조, 발표 자료 생성을 보조하는 기능입니다. 문서나 아이디어를 발표용 흐름으로 바꾸는 데 쓰입니다.'},
+      {name:'Meet AI', icon:'🎙', domain:'Workspace', function:'문서·협업 보조', usage:'회의·커뮤니케이션 정리', desc:'회의 내용을 요약하고 액션아이템을 정리하는 Meet 기반 AI입니다. 회의 후 정리와 공유 시간을 줄여줍니다.'},
+      {name:'Forms AI', icon:'⌁', domain:'Workspace', function:'문서·협업 보조', usage:'회의·커뮤니케이션 정리', desc:'설문, 신청서, 피드백 폼의 문항 구성을 돕는 기능입니다. 응답 수집 구조를 빠르게 만들 때 유용합니다.'},
+      {name:'Workspace Studio', icon:'WS', domain:'Workspace', function:'자동화·앱 제작', usage:'반복 업무 자동화', desc:'Workspace 안의 반복 업무를 자동화 흐름으로 만드는 도구입니다. 메일, 문서, 시트 작업을 조건과 실행으로 묶을 수 있습니다.'},
+      {name:'Workspace CLI', icon:'CLI', domain:'Workspace', function:'개발·운영', usage:'에이전트 자동화', desc:'Workspace 작업을 명령어로 다루는 개발자용 인터페이스입니다. 문서, 계정, 파일 관련 반복 작업을 스크립트화할 때 쓰입니다.'},
+      {name:'Vids', icon:'▶', domain:'Workspace', function:'이미지·영상 생성', usage:'제안서·발표 준비', desc:'업무용 설명 영상과 안내 영상을 만드는 Google Workspace 도구입니다. 문서보다 영상이 더 빠른 전달 상황에 사용할 수 있습니다.'},
+      {name:'Nano Banana', icon:'🍌', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'홍보·마케팅', desc:'이미지 생성과 편집에 쓰이는 시각 제작 도구입니다. 제품 설명, 안내 이미지, 캠페인 소재처럼 눈에 보이는 결과물을 만들 때 맞습니다.'},
+      {name:'Flow', icon:'〰', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'홍보·마케팅', desc:'시나리오와 장면 흐름을 영상으로 만드는 생성형 영상 도구입니다. 짧은 홍보 영상이나 설명형 콘텐츠 초안에 활용할 수 있습니다.'},
+      {name:'Pomeli', icon:'✧', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'홍보·마케팅', desc:'브랜드와 마케팅 소재 제작에 가까운 콘텐츠 생성 도구입니다. 안내 이미지, 캠페인 시안, 홍보 문구와 비주얼을 함께 잡을 때 좋습니다.'},
+      {name:'Mixboard', icon:'◍', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'자료 조사·아이디어 기획', desc:'이미지와 레퍼런스를 모아 무드보드처럼 방향을 잡는 도구입니다. 디자인 톤, 캠페인 분위기, 시각 콘셉트를 정리할 때 유용합니다.'},
+      {name:'Text FL', icon:'T', domain:'이미지·영상·콘텐츠', function:'이미지·영상 생성', usage:'자료 조사·아이디어 기획', desc:'텍스트 생성과 언어 실험에 가까운 도구로 볼 수 있습니다. 문장 변형, 카피 후보, 짧은 텍스트 실험에 활용할 수 있습니다.'},
+      {name:'AppSheet', icon:'APP', domain:'앱·서비스', function:'자동화·앱 제작', usage:'업무용 도구 만들기', desc:'스프레드시트 데이터를 기반으로 업무용 앱을 만드는 노코드 도구입니다. 점검, 신청, 관리, 현장 기록 앱을 빠르게 만들 수 있습니다.'},
+      {name:'Opal', icon:'◇', domain:'앱·서비스', function:'자동화·앱 제작', usage:'반복 업무 자동화', desc:'프롬프트와 간단한 구성을 바탕으로 AI 미니앱을 만드는 도구입니다. 사내 업무 보조 도구나 실험용 앱 프로토타입에 어울립니다.'},
+      {name:'Firebase', icon:'🔥', domain:'앱·서비스', function:'개발·운영', usage:'업무용 도구 만들기', desc:'앱의 인증, 데이터베이스, 호스팅 같은 백엔드를 제공하는 플랫폼입니다. 실제 서비스로 이어지는 업무용 도구를 만들 때 필요합니다.'},
+      {name:'Stitch', icon:'ST', domain:'앱·서비스', function:'자동화·앱 제작', usage:'업무용 도구 만들기', desc:'앱 화면이나 UI 흐름을 빠르게 구성하는 도구로 볼 수 있습니다. 아이디어를 업무용 화면 초안으로 바꾸는 데 쓰입니다.'},
+      {name:'Apps Script', icon:'</>', domain:'개발·자동화', function:'자동화·앱 제작', usage:'반복 업무 자동화', desc:'Google Workspace 작업을 코드로 자동화하는 스크립트 도구입니다. 시트 처리, 메일 발송, 문서 생성 같은 반복 작업에 강합니다.'},
+      {name:'Antigravity', icon:'AG', domain:'개발·자동화', function:'개발·운영', usage:'에이전트 자동화', desc:'AI 에이전트가 코드 작성, 실행, 검증 흐름을 함께 처리하도록 돕는 개발 자동화 도구입니다. 반복되는 개발 작업을 에이전트 중심으로 넘길 때 쓰입니다.'},
+      {name:'ADK', icon:'🤖', domain:'개발·자동화', function:'개발·운영', usage:'에이전트 자동화', desc:'AI 에이전트를 설계하고 실행하기 위한 개발 도구 묶음입니다. 여러 단계를 스스로 처리하는 업무 자동화 구조를 만들 때 쓰입니다.'},
+      {name:'gcloud CLI', icon:'☁', domain:'개발·자동화', function:'개발·운영', usage:['업무용 도구 만들기','에이전트 자동화'], desc:'Google Cloud 리소스를 명령어로 관리하는 도구입니다. 배포, 설정, 운영 작업을 자동화하거나 재현 가능하게 만듭니다.'},
+      {name:'Gemma', icon:'GM', domain:'개발·자동화', function:'개발·운영', usage:'에이전트 자동화', desc:'Google의 오픈 모델 계열로, 로컬·커스텀 AI 실험에 쓰입니다. 가벼운 모델 비교나 내부 환경 테스트에 활용할 수 있습니다.'}
+    ];
+
+    tools.forEach((d, i) => d.id = i);
+    const svg = document.getElementById('viz');
+    const ringsG = document.getElementById('rings');
+    const arcsG = document.getElementById('domainArcs');
+    const edgesG = document.getElementById('edges');
+    const nodesG = document.getElementById('nodes');
+    const domainLabelsG = document.getElementById('domainLabels');
+    const taxonomy = document.getElementById('taxonomy');
+    const groupNote = document.getElementById('groupNote');
+    const tableTitle = document.getElementById('tableTitle');
+    const tableDesc = document.getElementById('tableDesc');
+    const tableWrap = document.getElementById('tableWrap');
+
+    const cx = 480, cy = 470, r = 284;
+    let active = null;
+
+    function angleFor(i) {
+      const start = -Math.PI / 2 + 0.09;
+      const end = start + Math.PI * 2 - 0.18;
+      return start + (i / tools.length) * (end - start);
+    }
+    tools.forEach((d, i) => {
+      d.angle = angleFor(i);
+      d.x = cx + Math.cos(d.angle) * r;
+      d.y = cy + Math.sin(d.angle) * r;
+    });
+
+    function el(name, attrs = {}, parent) {
+      const node = document.createElementNS('http://www.w3.org/2000/svg', name);
+      Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+      if (parent) parent.appendChild(node);
+      return node;
+    }
+    function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+    function polarPath(radius, startAngle, endAngle) {
+      const x1 = cx + Math.cos(startAngle) * radius;
+      const y1 = cy + Math.sin(startAngle) * radius;
+      const x2 = cx + Math.cos(endAngle) * radius;
+      const y2 = cy + Math.sin(endAngle) * radius;
+      const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+      return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`;
+    }
+    function groupKey(type) { return type === 'domain' ? 'domain' : type === 'function' ? 'function' : 'usage'; }
+    function valuesFor(t, key) {
+      const value = t[key];
+      return Array.isArray(value) ? value : [value];
+    }
+    function displayValue(value) {
+      return Array.isArray(value) ? value.join(' · ') : value;
+    }
+    function groupsFor(type) {
+      const key = groupKey(type);
+      let names = [...new Set(tools.flatMap(t => valuesFor(t, key)))];
+      if (type === 'usage') {
+        names = usageOrder.filter(name => names.includes(name));
+      }
+      return names.map(name => ({ type, name, items: tools.filter(t => valuesFor(t, key).includes(name)) }));
+    }
+    function allGroups() { return [...groupsFor('domain'), ...groupsFor('function'), ...groupsFor('usage')]; }
+
+    function renderTaxonomy() {
+      const labels = { domain: '분야', function: '기능 구분', usage: '활용 방식' };
+      const codes = { domain: 'FIELD', function: 'FUNC', usage: 'USE' };
+      taxonomy.innerHTML = '';
+      ['domain','function','usage'].forEach(type => {
+        const col = document.createElement('div');
+        col.className = 'tax-col';
+        col.innerHTML = `<div class="tax-head"><span>${labels[type]}</span><code>${codes[type]}</code></div><div class="tax-items"></div>`;
+        const items = col.querySelector('.tax-items');
+        groupsFor(type).forEach(g => {
+          const b = document.createElement('button');
+          b.className = `tax-chip ${type === 'domain' ? 'domain-chip' : ''}`;
+          b.textContent = g.name;
+          b.dataset.type = type;
+          b.dataset.name = g.name;
+          if (type === 'domain') b.style.setProperty('--chip-color', domainColors[g.name]);
+          b.addEventListener('click', () => activateGroup(type, g.name));
+          items.appendChild(b);
+        });
+        taxonomy.appendChild(col);
+      });
+    }
+
+    function renderRings() {
+      clear(ringsG);
+      [132, 220, 302, 356, 392].forEach(rad => el('circle', { class: 'grid-ring', cx, cy, r: rad }, ringsG));
+      for (let i = 0; i < 64; i++) {
+        const a = -Math.PI / 2 + i * Math.PI * 2 / 64;
+        el('line', { class: 'ray', x1: cx + Math.cos(a) * 122, y1: cy + Math.sin(a) * 122, x2: cx + Math.cos(a) * 392, y2: cy + Math.sin(a) * 392 }, ringsG);
+      }
+    }
+
+    function renderDomainArcs() {
+      clear(arcsG); clear(domainLabelsG);
+      domainOrder.forEach(domain => {
+        const items = tools.filter(t => t.domain === domain);
+        const start = items[0].angle - .054;
+        const end = items[items.length - 1].angle + .054;
+        const mid = (start + end) / 2;
+        const color = domainColors[domain];
+        el('path', { class: 'domain-arc', d: polarPath(r + 30, start, end), stroke: color, style: `color:${color}` }, arcsG);
+
+        const lx = cx + Math.cos(mid) * (r + 92);
+        const ly = cy + Math.sin(mid) * (r + 92);
+        const labelG = el('g', { transform: `translate(${lx},${ly})` }, domainLabelsG);
+        const w = Math.max(74, domain.length * 12 + 24);
+        el('rect', { class: 'domain-label-bg', x: -w/2, y: -17, width: w, height: 34, rx: 17 }, labelG);
+        el('circle', { class: 'domain-label-dot', cx: -w/2 + 17, cy: 0, r: 5.3, fill: color }, labelG);
+        const text = el('text', { class: 'domain-label-text', x: 8, y: 0 }, labelG);
+        text.textContent = domain;
+      });
+    }
+
+    function circularMeanAngle(items) {
+      const sx = items.reduce((sum, t) => sum + Math.cos(t.angle), 0);
+      const sy = items.reduce((sum, t) => sum + Math.sin(t.angle), 0);
+      return Math.atan2(sy, sx);
+    }
+
+    function hubPointForGroup(g) {
+      const angle = circularMeanAngle(g.items);
+      const radius = g.type === 'domain' ? 174 : g.type === 'function' ? 122 : 86;
+      return {
+        x: cx + Math.cos(angle) * radius,
+        y: cy + Math.sin(angle) * radius,
+        angle
+      };
+    }
+
+    function spokePath(item, hub, index, total) {
+      const dx = hub.x - item.x;
+      const dy = hub.y - item.y;
+      const len = Math.max(1, Math.hypot(dx, dy));
+      const spread = (index - (total - 1) / 2) * 4.5;
+      const qx = (item.x + hub.x) / 2 + (-dy / len) * spread;
+      const qy = (item.y + hub.y) / 2 + (dx / len) * spread;
+      return `M ${item.x.toFixed(1)} ${item.y.toFixed(1)} Q ${qx.toFixed(1)} ${qy.toFixed(1)} ${hub.x.toFixed(1)} ${hub.y.toFixed(1)}`;
+    }
+
+    function renderEdges() {
+      clear(edgesG);
+      allGroups().forEach(g => {
+        if (g.items.length < 2) return;
+        const hub = hubPointForGroup(g);
+        const lineColor = 'rgba(60,64,67,.58)';
+        g.items.forEach((item, index) => {
+          el('path', {
+            class: 'edge',
+            d: spokePath(item, hub, index, g.items.length),
+            stroke: lineColor,
+            'stroke-width': 3.4,
+            'data-type': g.type,
+            'data-name': g.name,
+            'data-source': item.id,
+            'data-target': 'hub'
+          }, edgesG);
+        });
+        const hubColor = g.type === 'domain' ? domainColors[g.name] : '#5f6368';
+        const hubG = el('g', {
+          class: 'edge-hub',
+          transform: `translate(${hub.x.toFixed(1)},${hub.y.toFixed(1)})`,
+          style: `--hub-color:${hubColor}`,
+          'data-type': g.type,
+          'data-name': g.name
+        }, edgesG);
+        el('circle', { r: 8 }, hubG);
+        el('circle', { class: 'hub-dot', r: 3.6 }, hubG);
+      });
+    }
+
+    function renderNodes() {
+      clear(nodesG);
+      tools.forEach(t => {
+        const g = el('g', { class: 'node', transform: `translate(${t.x}, ${t.y})`, 'data-id': t.id }, nodesG);
+        el('circle', { class: 'ring', r: 18, stroke: domainColors[t.domain] }, g);
+        el('circle', { class: 'core', r: 13 }, g);
+        const icon = el('text', { class: 'icon', y: .5 }, g); icon.textContent = t.icon;
+        const lx = Math.cos(t.angle) * -36;
+        const ly = Math.sin(t.angle) * -36;
+        const deg = t.angle * 180 / Math.PI;
+        const label = el('text', {
+          class: 'label', x: lx, y: ly,
+          'text-anchor': Math.cos(t.angle) > 0 ? 'end' : 'start',
+          transform: `rotate(${deg > 90 || deg < -90 ? deg + 180 : deg}, ${lx}, ${ly})`
+        }, g);
+        label.textContent = t.name;
+        g.addEventListener('click', () => activateTool(t.id));
+      });
+    }
+
+    function imageForTool(t) {
+      const direct = {
+        'Gemini': 'gemini.png',
+        'Deep Research': 'deep-research.png',
+        'Nano Banana': 'nano-banana.png',
+        'NotebookLM': 'notebooklm.png',
+        'Gem': 'gem.png',
+        'Gmail AI': 'gmail-ai.png',
+        'Doc AI': 'doc-ai.png',
+        'Sheets AI': 'sheets-ai.png',
+        'Slides AI': 'slides-ai.png',
+        'Meet AI': 'meet-ai.png',
+        'Forms AI': 'form-ai.png',
+        'Workspace Studio': 'workspace-studio.png',
+        'Apps Script': 'apps-script.png',
+        'AppSheet': 'appsheet.png',
+        'Opal': 'opal.png',
+        'Disco': 'disco.png',
+        'Flow': 'flow.png',
+        'Vids': 'vids.png',
+        'Pomeli': 'pomeli.png',
+        'Mixboard': 'mixboard.png',
+        'Google AI Studio': 'ai-studio.png',
+        'Firebase': 'firebase.png',
+        'Stitch': 'stitch.png',
+        'Antigravity': 'antigravity.png',
+        'ADK': 'adk.png',
+        'gcloud CLI': 'gcloud-cli.png',
+        'Workspace CLI': 'workspace-cli.png',
+        'Gemini Live': 'gemini-live.png',
+        'AI Mode': 'ai-mode.png',
+        'Gemini in Chrome': 'chrome-gemini.png',
+        'Text FL': 'text-fx.png',
+        'Gemma': 'gemma.png'
+      };
+      return direct[t.name] ? `google-ai-tools-chord-visualization-assets/${direct[t.name]}` : '';
+    }
+
+    function toolThumbHTML(t, large = false) {
+      const color = domainColors[t.domain];
+      const src = imageForTool(t);
+      if (!src) return '';
+      return `<div class="tool-thumb ${large ? 'tool-detail-hero' : ''}" style="--tool-color:${color}">
+        <img src="${src}" alt="${t.name} 대표 이미지" loading="lazy">
+      </div>`;
+    }
+
+    function renderToolDetail(t) {
+      tableTitle.textContent = `${t.name} 상세`;
+      tableDesc.textContent = '원 안의 툴을 클릭하면 이 영역에서 대표 이미지와 설명을 확인할 수 있습니다.';
+      tableWrap.innerHTML = `
+        <div class="tool-detail">
+          ${toolThumbHTML(t, true)}
+          <h3>${t.name}</h3>
+          <p>${t.desc}</p>
+          <div class="detail-tags"><span>${displayValue(t.domain)}</span><span>${displayValue(t.function)}</span><span>${displayValue(t.usage)}</span></div>
+        </div>`;
+    }
+
+    function updateGroupNote(type, name) {
+      const info = groupDescriptions[name] || ['🔗', name, '선택한 기준에 해당하는 도구가 공통 허브로 연결됩니다.'];
+      groupNote.querySelector('.group-emoji').classList.remove('cue-click');
+      groupNote.querySelector('.group-emoji').textContent = info[0];
+      groupNote.querySelector('.group-text strong').textContent = `${info[1]} · ${type === 'domain' ? '분야' : type === 'function' ? '기능 구분' : '활용 방식'} · ${info[2]}`;
+      groupNote.querySelector('.group-text p').textContent = '툴끼리 모두 엮지 않고, 선택한 기준에 속한 툴만 한 기준점으로 모아 보여줍니다.';
+    }
+
+    function resetGroupNote() {
+      groupNote.querySelector('.group-emoji').classList.remove('cue-click');
+      groupNote.querySelector('.group-emoji').textContent = '🧭';
+      groupNote.querySelector('.group-text strong').textContent = '분류칩이나 툴을 클릭하면 관계가 열립니다';
+      groupNote.querySelector('.group-text p').textContent = '오른쪽 상단 상자와 원형 툴 노드에서 원하는 기준을 선택하세요.';
+    }
+
+    function renderComparison(type, name) {
+      const key = groupKey(type);
+      const items = tools.filter(t => valuesFor(t, key).includes(name));
+      const label = type === 'domain' ? '분야' : type === 'function' ? '기능 구분' : '활용 방식';
+      tableTitle.textContent = `${name} 비교표`;
+      tableDesc.textContent = `${label} 기준으로 묶인 ${items.length}개 도구가 실제 업무에서 어떻게 다르게 쓰이는지 비교합니다.`;
+      const orderedItems = type === 'usage' && usageToolOrder[name]
+        ? [...items].sort((a, b) => {
+            const ai = usageToolOrder[name].indexOf(a.name);
+            const bi = usageToolOrder[name].indexOf(b.name);
+            return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+          })
+        : items;
+      tableWrap.innerHTML = `
+        <table>
+          <thead><tr><th>툴</th><th>분야</th><th>기능 구분</th><th>활용 방식</th><th>구분 포인트</th></tr></thead>
+          <tbody>${orderedItems.map(t => `
+            <tr>
+              <td>${t.name}${toolThumbHTML(t)}</td>
+              <td><span class="pill">${t.domain}</span></td>
+              <td>${t.function}</td>
+              <td>${displayValue(t.usage)}</td>
+              <td>${t.desc}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function resetComparison() {
+      tableTitle.textContent = '묶음별 툴 비교';
+      tableDesc.textContent = '분류 항목을 클릭하면, 그 묶음 안에서 각 툴이 어떤 업무에 쓰이는지 비교표로 바뀝니다.';
+      tableWrap.innerHTML = '<div class="empty-state">오른쪽 상단의 <strong>분야</strong>, <strong>기능 구분</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.</div>';
+    }
+
+    function activateGroup(type, name) {
+      active = { type, name };
+      taxonomy.classList.remove('attract');
+      updateGroupNote(type, name);
+      renderComparison(type, name);
+      document.querySelectorAll('.tax-chip').forEach(c => c.classList.toggle('hot', c.dataset.type === type && c.dataset.name === name));
+      document.querySelectorAll('.edge').forEach(edge => {
+        const isHot = edge.dataset.type === type && edge.dataset.name === name;
+        edge.classList.toggle('visible', isHot);
+        edge.classList.toggle('faint', false);
+      });
+      document.querySelectorAll('.edge-hub').forEach(hub => {
+        hub.classList.toggle('visible', hub.dataset.type === type && hub.dataset.name === name);
+      });
+      const key = groupKey(type);
+      document.querySelectorAll('.node').forEach(node => {
+        const t = tools[Number(node.dataset.id)];
+        const hot = valuesFor(t, key).includes(name);
+        node.classList.toggle('hot', hot);
+        node.classList.toggle('dimmed', !hot);
+      });
+    }
+
+    function clearActive() {
+      active = null;
+      taxonomy.classList.add('attract');
+      resetGroupNote();
+      resetComparison();
+      document.querySelectorAll('.tax-chip').forEach(c => c.classList.remove('hot'));
+      document.querySelectorAll('.edge').forEach(edge => edge.classList.remove('visible','faint'));
+      document.querySelectorAll('.edge-hub').forEach(hub => hub.classList.remove('visible'));
+      document.querySelectorAll('.node').forEach(node => node.classList.remove('hot','dimmed'));
+    }
+
+    function activateTool(id) {
+      const t = tools[Number(id)];
+      taxonomy.classList.remove('attract');
+      renderToolDetail(t);
+      document.querySelectorAll('.node').forEach(node => {
+        const hot = Number(node.dataset.id) === t.id;
+        node.classList.toggle('hot', hot);
+        if (!active) node.classList.toggle('dimmed', !hot);
+      });
+      if (!active) {
+        document.querySelectorAll('.edge').forEach(edge => {
+          const linked = Number(edge.dataset.source) === t.id;
+          edge.classList.toggle('visible', linked);
+          edge.classList.toggle('faint', false);
+        });
+        document.querySelectorAll('.edge-hub').forEach(hub => {
+          const key = groupKey(hub.dataset.type);
+          hub.classList.toggle('visible', valuesFor(t, key).includes(hub.dataset.name));
+        });
+      }
+    }
+
+    function clearToolOnly() {
+      if (active) {
+        activateGroup(active.type, active.name);
+      } else {
+        taxonomy.classList.add('attract');
+        resetComparison();
+        document.querySelectorAll('.edge').forEach(edge => edge.classList.remove('visible','faint'));
+        document.querySelectorAll('.edge-hub').forEach(hub => hub.classList.remove('visible'));
+        document.querySelectorAll('.node').forEach(node => node.classList.remove('hot','dimmed'));
+      }
+    }
+
+
+    function openImageLightbox(src, caption) {
+      const box = document.getElementById('imageLightbox');
+      const img = document.getElementById('imageLightboxImage');
+      const cap = document.getElementById('imageLightboxCaption');
+      img.src = src;
+      img.alt = caption || '';
+      cap.textContent = caption || '이미지 확대 보기';
+      box.classList.add('open');
+      box.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeImageLightbox() {
+      const box = document.getElementById('imageLightbox');
+      const img = document.getElementById('imageLightboxImage');
+      box.classList.remove('open');
+      box.setAttribute('aria-hidden', 'true');
+      img.src = '';
+    }
+
+    tableWrap.addEventListener('click', (event) => {
+      const img = event.target.closest('.tool-thumb img');
+      if (!img) return;
+      openImageLightbox(img.currentSrc || img.src, img.alt);
+    });
+    document.getElementById('imageLightboxClose').addEventListener('click', closeImageLightbox);
+    document.getElementById('imageLightbox').addEventListener('click', (event) => {
+      if (event.target.id === 'imageLightbox') closeImageLightbox();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeImageLightbox();
+    });
+
+    renderTaxonomy();
+    renderRings();
+    renderDomainArcs();
+    renderEdges();
+    renderNodes();
+  </script>
+</body>
+</html>
