@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google AI Ecosystem Map - A4</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  :root{
+    --ink:#111827;
+    --muted:#667085;
+    --paper:#f7f3ea;
+    --line:rgba(17,24,39,.13);
+    --blue:#4285F4;
+    --red:#EA4335;
+    --yellow:#FBBC04;
+    --green:#34A853;
+    --cyan:#00A5A8;
+    --purple:#7C3AED;
+    --slate:#475569;
+    --deep:#07111F;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:#d7d1c5;
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    width:297mm;
+    height:210mm;
+    margin:16px auto;
+    position:relative;
+    overflow:hidden;
+    padding:11mm 15mm 13mm;
+    background:
+      radial-gradient(circle at 82% 10%,rgba(66,133,244,.15),transparent 22%),
+      radial-gradient(circle at 11% 88%,rgba(52,168,83,.14),transparent 26%),
+      linear-gradient(135deg,#fffdfa 0%,var(--paper) 56%,#eee7d8 100%);
+    box-shadow:0 24px 60px rgba(20,24,35,.25);
+  }
+  .sheet:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:.27;
+    background-image:
+      linear-gradient(rgba(17,24,39,.030) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(17,24,39,.024) 1px,transparent 1px);
+    background-size:18px 18px;
+    mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.24));
+  }
+  .lang-toggle{
+    position:absolute;
+    top:8mm;
+    right:11mm;
+    z-index:8;
+    display:flex;
+    gap:4px;
+    padding:4px;
+    border:1px solid rgba(17,24,39,.12);
+    border-radius:999px;
+    background:rgba(255,255,255,.78);
+    box-shadow:0 8px 24px rgba(31,37,52,.10);
+    backdrop-filter:blur(10px);
+  }
+  .lang-toggle button{
+    border:0;
+    min-width:54px;
+    height:27px;
+    padding:0 9px;
+    border-radius:999px;
+    background:transparent;
+    color:#475569;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.01em;
+    cursor:pointer;
+  }
+  .lang-toggle button.active{
+    color:#fff;
+    background:#111827;
+    box-shadow:0 5px 14px rgba(17,24,39,.18);
+  }
+  header{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1.02fr .98fr;
+    gap:18px;
+    align-items:end;
+    min-height:31mm;
+    padding-right:38mm;
+  }
+  .brandline{
+    display:flex;
+    gap:7px;
+    align-items:center;
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:850;
+  }
+  .dots{display:inline-flex;gap:4px}
+  .dot{width:7px;height:7px;border-radius:99px;display:block}
+  .b{background:var(--blue)} .r{background:var(--red)} .y{background:var(--yellow)} .g{background:var(--green)}
+  h1{
+    margin:7px 0 0;
+    font-size:34px;
+    line-height:1.02;
+    letter-spacing:-.058em;
+    font-weight:940;
+    text-wrap:balance;
+  }
+  html[lang="en"] h1{font-size:33px;letter-spacing:-.052em}
+  .thesis{
+    border-left:4px solid var(--blue);
+    padding:8px 0 8px 14px;
+    font-size:13.4px;
+    line-height:1.48;
+    color:#202938;
+    font-weight:690;
+    text-wrap:pretty;
+  }
+  html[lang="en"] .thesis{font-size:12.9px;line-height:1.45}
+  .thesis strong{color:#2563eb;font-weight:900}
+  .diagram{
+    position:relative;
+    z-index:2;
+    height:145mm;
+    margin-top:8mm;
+    display:grid;
+    grid-template-columns:28% 38% 34%;
+    grid-template-rows:repeat(4,1fr);
+    gap:8px 11px;
+  }
+  .lane-label{
+    position:absolute;
+    top:-4.5mm;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    color:rgba(17,24,39,.60);
+    font-size:8px;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    font-weight:940;
+  }
+  .lane-label:before{content:"";width:26px;height:2px;border-radius:99px;background:currentColor;opacity:.55}
+  .in{left:2px}.out{right:2px}
+  .core{
+    grid-column:2;
+    grid-row:1/5;
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:15px 16px;
+    color:white;
+    background:linear-gradient(155deg,#07111f 0%,#10233d 55%,#11251e 100%);
+    box-shadow:0 24px 58px rgba(8,23,48,.34);
+    display:grid;
+    grid-template-rows:auto 1fr auto;
+  }
+  .core:before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:42%;
+    transform:translate(-50%,-50%);
+    width:360px;
+    height:360px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle,rgba(255,255,255,.18) 0 15%,transparent 15.8%),
+      conic-gradient(from 210deg,var(--blue),var(--green),var(--yellow),var(--red),var(--purple),var(--blue));
+    opacity:.43;
+  }
+  .core:after{content:"";position:absolute;inset:13px;border-radius:22px;border:1px solid rgba(255,255,255,.16)}
+  .core>*{position:relative;z-index:2}
+  .core-top{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    color:rgba(255,255,255,.66);
+    font-size:8.8px;
+    letter-spacing:.13em;
+    font-weight:900;
+    text-transform:uppercase;
+  }
+  .core-center{
+    align-self:center;
+    justify-self:center;
+    width:174px;
+    height:174px;
+    border-radius:50%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:
+      radial-gradient(circle at 36% 26%,rgba(255,255,255,.38),transparent 24%),
+      linear-gradient(145deg,#ffffff,#dbeafe 45%,#dcfce7 100%);
+    color:#0b1220;
+    box-shadow:0 24px 56px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.72);
+  }
+  .core-center small{font-size:9px;letter-spacing:.16em;color:#526072;font-weight:950}
+  .core-center b{margin-top:6px;font-size:39px;letter-spacing:-.06em;font-weight:980}
+  .core-center span{margin-top:5px;font-size:10px;color:#475569;font-weight:850}
+  .engine{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:9px}
+  .step{
+    min-height:38px;
+    border-radius:13px;
+    border:1px solid rgba(255,255,255,.13);
+    background:rgba(255,255,255,.066);
+    padding:7px;
+    text-align:center;
+  }
+  .step b{display:block;color:#fff;font-size:9.4px}
+  .step span{display:block;margin-top:2px;color:rgba(255,255,255,.70);font-size:7.7px;line-height:1.2;font-weight:720}
+  .insight{margin:0;text-align:center;color:rgba(255,255,255,.84);font-size:9.9px;line-height:1.50;font-weight:680}
+  html[lang="en"] .insight{font-size:9.55px;line-height:1.42}
+  .insight strong{color:white;font-weight:920}
+  .node{
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
+    border-radius:17px;
+    background:rgba(255,255,255,.82);
+    box-shadow:0 10px 28px rgba(31,37,52,.072);
+    padding:9px 10px 9px 49px;
+    min-height:0;
+  }
+  .node:before{
+    content:attr(data-icon);
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:28px;
+    height:28px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    color:white;
+    font-size:15px;
+    font-weight:950;
+    box-shadow:0 8px 18px rgba(0,0,0,.14);
+  }
+  .node:after{
+    content:attr(data-num);
+    position:absolute;
+    left:18px;
+    bottom:9px;
+    color:rgba(17,24,39,.42);
+    font-size:8px;
+    font-weight:950;
+    letter-spacing:.04em;
+  }
+  .kicker{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:7px;
+    margin-bottom:4px;
+    font-size:8.2px;
+    line-height:1;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:940;
+  }
+  .role{border-radius:999px;padding:3px 6px 3.4px;color:#fff;font-size:7.8px;letter-spacing:-.01em;font-weight:900;white-space:nowrap}
+  html[lang="en"] .role{font-size:7.2px;padding-inline:5px}
+  h3{margin:0;font-size:13.4px;line-height:1.08;letter-spacing:-.038em;font-weight:940}
+  html[lang="en"] h3{font-size:12.25px;line-height:1.05;letter-spacing:-.035em}
+  p{margin:5px 0 0;font-size:8.9px;line-height:1.34;color:#3d4657;font-weight:590;word-break:keep-all}
+  html[lang="en"] .node p{font-size:8.25px;line-height:1.24;word-break:normal}
+  .chips{display:flex;flex-wrap:wrap;gap:3.5px;margin-top:6px}
+  .chip{border:1px solid rgba(17,24,39,.10);border-radius:999px;background:rgba(255,255,255,.62);padding:3px 5px 3.5px;color:#283445;font-size:7.6px;line-height:1;font-weight:820;white-space:nowrap}
+  html[lang="en"] .chip{font-size:7.15px;padding-inline:4.5px}
+  .n1{grid-column:1;grid-row:1;border-top:4px solid var(--blue)}.n1:before,.n1 .role{background:var(--blue)}
+  .n2{grid-column:1;grid-row:2;border-top:4px solid var(--green)}.n2:before,.n2 .role{background:var(--green)}
+  .n3{grid-column:1;grid-row:3;border-top:4px solid var(--yellow)}.n3:before,.n3 .role{background:#d79d00}
+  .n4{grid-column:1;grid-row:4;border-top:4px solid var(--cyan)}.n4:before,.n4 .role{background:var(--cyan)}
+  .n5{grid-column:3;grid-row:1;border-top:4px solid var(--red)}.n5:before,.n5 .role{background:var(--red)}
+  .n6{grid-column:3;grid-row:2;border-top:4px solid var(--purple)}.n6:before,.n6 .role{background:var(--purple)}
+  .n7{grid-column:3;grid-row:3;border-top:4px solid #111827}.n7:before,.n7 .role{background:#111827}
+  .n8{grid-column:3;grid-row:4;border-top:4px solid var(--slate)}.n8:before,.n8 .role{background:var(--slate)}
+  .arrows{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .arrows svg{width:100%;height:100%;overflow:visible}
+  .arrows path{fill:none;stroke:rgba(17,24,39,.18);stroke-width:1.35;stroke-dasharray:5 6}
+  .arrows marker path{fill:rgba(17,24,39,.24);stroke:none}
+  .signature{position:absolute;z-index:3;right:15mm;bottom:7mm;color:rgba(17,24,39,.48);font-size:8px;letter-spacing:.06em;font-weight:850}
+  @media print{
+    body{background:white}
+    .sheet{margin:0;box-shadow:none}
+    .lang-toggle{display:none}
+  }
+</style>
+</head>
+<body>
+<main class="sheet" aria-label="Google AI ecosystem map A4">
+  <nav class="lang-toggle" aria-label="Language toggle">
+    <button type="button" class="active" data-set-lang="ko" aria-pressed="true">🇰🇷 한</button>
+    <button type="button" data-set-lang="en" aria-pressed="false">🇺🇸 EN</button>
+  </nav>
+  <header>
+    <section>
+      <div class="brandline"><span class="dots"><i class="dot b"></i><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i></span> <span data-i18n="brand">Google AI Ecosystem Map</span></div>
+      <h1 data-i18n="title">Google AI는 툴 묶음이 아니라<br>문맥이 흐르는 업무 운영체제다</h1>
+    </section>
+    <section class="thesis" data-i18n="thesis">검색은 <strong>대화</strong>가 되고, 대화는 <strong>문서·시트·슬라이드</strong> 위에서 실행되고, 실행은 <strong>앱·CLI·에이전트</strong>로 내려간다. 핵심은 Google 계정, Drive, Workspace, Chrome, API, Cloud가 같은 문맥을 공유한다는 점이다.</section>
+  </header>
+  <section class="diagram">
+    <div class="lane-label in" data-i18n="laneIn">Context building</div>
+    <div class="lane-label out" data-i18n="laneOut">Execution expansion</div>
+    <div class="arrows" aria-hidden="true"><svg viewBox="0 0 1000 600" preserveAspectRatio="none"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z"></path></marker></defs><path marker-end="url(#arrow)" d="M270 72 C360 84 400 102 500 142"></path><path marker-end="url(#arrow)" d="M270 214 C365 214 410 232 500 268"></path><path marker-end="url(#arrow)" d="M270 360 C365 350 410 330 500 302"></path><path marker-end="url(#arrow)" d="M270 504 C360 470 410 410 500 334"></path><path marker-end="url(#arrow)" d="M500 142 C590 104 650 84 740 72"></path><path marker-end="url(#arrow)" d="M500 268 C590 232 650 214 740 214"></path><path marker-end="url(#arrow)" d="M500 302 C590 332 650 350 740 360"></path><path marker-end="url(#arrow)" d="M500 334 C590 410 650 470 740 504"></path></svg></div>
+
+    <article class="node n1" data-num="01" data-icon="💬"><div class="kicker"><span data-i18n="n1k">Interface</span> <span class="role" data-i18n="n1r">대화 입구</span></div><h3 data-i18n="n1h">검색창이 Gemini 입구가 됨</h3><p data-i18n="n1p">Gemini App, AI Mode, Live, Deep/Fast Research가 검색·메일·드라이브·유튜브를 한 대화 표면으로 모은다.</p><div class="chips"><span class="chip">Gemini</span><span class="chip">AI Mode</span><span class="chip">Deep Research</span><span class="chip">Fast Research</span></div></article>
+    <article class="node n2" data-num="02" data-icon="📚"><div class="kicker"><span data-i18n="n2k">Knowledge</span> <span class="role" data-i18n="n2r">출처 고정</span></div><h3 data-i18n="n2h">자료가 검증 가능한 지식으로 바뀜</h3><p data-i18n="n2p">NotebookLM은 PDF·URL·YouTube를 출처 기반 지식베이스로 묶고, Gems와 Drive 문맥은 반복 가능한 업무 기준을 만든다.</p><div class="chips"><span class="chip">NotebookLM</span><span class="chip">Audio Overview</span><span class="chip">Gems</span><span class="chip">Drive</span></div></article>
+    <article class="node n3" data-num="03" data-icon="🗂️"><div class="kicker"><span data-i18n="n3k">Workspace Data</span> <span class="role" data-i18n="n3r">업무 원천</span></div><h3 data-i18n="n3h">일상의 파일이 실행 데이터가 됨</h3><p data-i18n="n3p">Gmail, Docs, Sheets, Slides, Meet, Forms가 Gemini 사이드패널과 Drive 검색으로 연결된다.</p><div class="chips"><span class="chip">Gmail</span><span class="chip">Docs</span><span class="chip">Sheets</span><span class="chip">Slides</span><span class="chip">Meet</span><span class="chip">Forms</span></div></article>
+    <article class="node n4" data-num="04" data-icon="⚙️"><div class="kicker"><span data-i18n="n4k">Automation</span> <span class="role" data-i18n="n4r">조건 실행</span></div><h3 data-i18n="n4h">반복 업무가 트리거로 움직임</h3><p data-i18n="n4p">Flows, Opal, Apps Script, AppSheet가 입력·조건·액션을 묶어 보고서, 알림, 문서 생성, 승인 흐름을 자동화한다.</p><div class="chips"><span class="chip">Flows</span><span class="chip">Opal</span><span class="chip">Apps Script</span><span class="chip">AppSheet</span></div></article>
+
+    <article class="core"><div class="core-top"><span data-i18n="coreTop1">Connected by account, drive, permissions</span><span data-i18n="coreTop2">Google AI stack</span></div><div class="core-center"><small>CONTEXT CORE</small><b>Gemini</b><span>prompt → context → action</span></div><div><div class="engine"><div class="step"><b>Ask</b><span data-i18n="s1">검색·대화·리서치</span></div><div class="step"><b>Ground</b><span data-i18n="s2">Drive·출처·권한</span></div><div class="step"><b>Create</b><span data-i18n="s3">문서·시트·영상</span></div><div class="step"><b>Operate</b><span data-i18n="s4">API·CLI·Agent</span></div></div><p class="insight" data-i18n="insight"><strong>한 번 만든 문맥</strong>이 검색, 문서, 시트, 슬라이드, 영상, 앱, 에이전트로 흐른다.<br>경쟁력은 모델 성능만이 아니라 <strong>연결된 업무 표면적</strong>에서 나온다.</p></div></article>
+
+    <article class="node n5" data-num="05" data-icon="🎬"><div class="kicker"><span data-i18n="n5k">Creation</span> <span class="role" data-i18n="n5r">에셋 변환</span></div><h3 data-i18n="n5h">지식이 바로 콘텐츠·UI 에셋이 됨</h3><p data-i18n="n5p">Veo, Flow, Vids, Pomelli, Mixboard, Stitch가 리서치와 브랜드 문맥을 영상·광고·교육 자료·UI 초안으로 바꾼다.</p><div class="chips"><span class="chip">Veo</span><span class="chip">Flow</span><span class="chip">Vids</span><span class="chip">Pomelli</span><span class="chip">Mixboard</span><span class="chip">Stitch</span></div></article>
+    <article class="node n6" data-num="06" data-icon="🌐"><div class="kicker"><span data-i18n="n6k">Chrome Gemini</span> <span class="role" data-i18n="n6r">웹 맥락</span></div><h3 data-i18n="n6h">브라우저가 업무 표면으로 들어옴</h3><p data-i18n="n6p">Chrome의 Gemini 기능은 현재 페이지, 탭, 검색 흐름을 대화 문맥으로 끌어와 웹 리서치와 Workspace 작업을 잇는다.</p><div class="chips"><span class="chip">Chrome Gemini</span><span class="chip">Page Context</span><span class="chip">Tab Context</span><span class="chip">Lens</span></div></article>
+    <article class="node n7" data-num="07" data-icon="🧩"><div class="kicker"><span data-i18n="n7k">App / API</span> <span class="role" data-i18n="n7r">서비스화</span></div><h3 data-i18n="n7h">대화 실험이 앱과 백엔드로 내려감</h3><p data-i18n="n7p">AI Studio, Gemini API, Firebase, Cloud Run, AppSheet가 프롬프트 실험을 앱, 데이터 처리, 배포 가능한 서비스로 바꾼다.</p><div class="chips"><span class="chip">AI Studio</span><span class="chip">Gemini API</span><span class="chip">Firebase</span><span class="chip">Cloud Run</span><span class="chip">AppSheet</span></div></article>
+    <article class="node n8" data-num="08" data-icon="🤖"><div class="kicker"><span data-i18n="n8k">Agent / Ops</span> <span class="role" data-i18n="n8r">조직 실행</span></div><h3 data-i18n="n8h">권한 있는 에이전트 운영으로 확장</h3><p data-i18n="n8p">Antigravity, ADK, MCP에 gcloud CLI와 Workspace CLI가 붙으면 도구·권한·로그를 가진 조직형 AI 실행 체계로 넓어진다.</p><div class="chips"><span class="chip">Antigravity</span><span class="chip">ADK</span><span class="chip">MCP</span><span class="chip">gcloud CLI</span><span class="chip">Workspace CLI</span><span class="chip">Gemini Enterprise</span></div></article>
+  </section>
+  <div class="signature" data-i18n="sig">@marketer.ai.seulki · Google AI Ecosystem Map</div>
+</main>
+<script>
+const copy = {
+  ko: {
+    brand: 'Google AI Ecosystem Map',
+    title: 'Google AI는 툴 묶음이 아니라<br>문맥이 흐르는 업무 운영체제다',
+    thesis: '검색은 <strong>대화</strong>가 되고, 대화는 <strong>문서·시트·슬라이드</strong> 위에서 실행되고, 실행은 <strong>앱·CLI·에이전트</strong>로 내려간다. 핵심은 Google 계정, Drive, Workspace, Chrome, API, Cloud가 같은 문맥을 공유한다는 점이다.',
+    laneIn: 'Context building', laneOut: 'Execution expansion',
+    n1k:'Interface', n1r:'대화 입구', n1h:'검색창이 Gemini 입구가 됨', n1p:'Gemini App, AI Mode, Live, Deep/Fast Research가 검색·메일·드라이브·유튜브를 한 대화 표면으로 모은다.',
+    n2k:'Knowledge', n2r:'출처 고정', n2h:'자료가 검증 가능한 지식으로 바뀜', n2p:'NotebookLM은 PDF·URL·YouTube를 출처 기반 지식베이스로 묶고, Gems와 Drive 문맥은 반복 가능한 업무 기준을 만든다.',
+    n3k:'Workspace Data', n3r:'업무 원천', n3h:'일상의 파일이 실행 데이터가 됨', n3p:'Gmail, Docs, Sheets, Slides, Meet, Forms가 Gemini 사이드패널과 Drive 검색으로 연결된다.',
+    n4k:'Automation', n4r:'조건 실행', n4h:'반복 업무가 트리거로 움직임', n4p:'Flows, Opal, Apps Script, AppSheet가 입력·조건·액션을 묶어 보고서, 알림, 문서 생성, 승인 흐름을 자동화한다.',
+    coreTop1:'Connected by account, drive, permissions', coreTop2:'Google AI stack', s1:'검색·대화·리서치', s2:'Drive·출처·권한', s3:'문서·시트·영상', s4:'API·CLI·Agent', insight:'<strong>한 번 만든 문맥</strong>이 검색, 문서, 시트, 슬라이드, 영상, 앱, 에이전트로 흐른다.<br>경쟁력은 모델 성능만이 아니라 <strong>연결된 업무 표면적</strong>에서 나온다.',
+    n5k:'Creation', n5r:'에셋 변환', n5h:'지식이 바로 콘텐츠·UI 에셋이 됨', n5p:'Veo, Flow, Vids, Pomelli, Mixboard, Stitch가 리서치와 브랜드 문맥을 영상·광고·교육 자료·UI 초안으로 바꾼다.',
+    n6k:'Chrome Gemini', n6r:'웹 맥락', n6h:'브라우저가 업무 표면으로 들어옴', n6p:'Chrome의 Gemini 기능은 현재 페이지, 탭, 검색 흐름을 대화 문맥으로 끌어와 웹 리서치와 Workspace 작업을 잇는다.',
+    n7k:'App / API', n7r:'서비스화', n7h:'대화 실험이 앱과 백엔드로 내려감', n7p:'AI Studio, Gemini API, Firebase, Cloud Run, AppSheet가 프롬프트 실험을 앱, 데이터 처리, 배포 가능한 서비스로 바꾼다.',
+    n8k:'Agent / Ops', n8r:'조직 실행', n8h:'권한 있는 에이전트 운영으로 확장', n8p:'Antigravity, ADK, MCP에 gcloud CLI와 Workspace CLI가 붙으면 도구·권한·로그를 가진 조직형 AI 실행 체계로 넓어진다.',
+    sig:'@marketer.ai.seulki · Google AI Ecosystem Map'
+  },
+  en: {
+    brand: 'Google AI Ecosystem Map',
+    title: 'Google AI is not a bundle of tools.<br>It is an operating system for work context.',
+    thesis: 'Search becomes <strong>conversation</strong>. Conversation runs on <strong>Docs, Sheets, and Slides</strong>. Execution flows down into <strong>apps, CLI, and agents</strong>. The real shift is that Google Account, Drive, Workspace, Chrome, API, and Cloud share the same work context.',
+    laneIn: 'Context building', laneOut: 'Execution expansion',
+    n1k:'Interface', n1r:'Conversation layer', n1h:'Search becomes the Gemini entry point', n1p:'Gemini App, AI Mode, Live, Deep and Fast Research bring Search, Gmail, Drive, and YouTube into one conversational surface.',
+    n2k:'Knowledge', n2r:'Grounded sources', n2h:'Files become verifiable knowledge', n2p:'NotebookLM turns PDFs, URLs, and YouTube into source grounded knowledge bases, while Gems and Drive context create repeatable work standards.',
+    n3k:'Workspace Data', n3r:'Work source', n3h:'Everyday files become execution data', n3p:'Gmail, Docs, Sheets, Slides, Meet, and Forms connect through the Gemini side panel and Drive search.',
+    n4k:'Automation', n4r:'Conditional action', n4h:'Repetitive work moves by trigger', n4p:'Flows, Opal, Apps Script, and AppSheet connect inputs, conditions, and actions for reports, alerts, document generation, and approvals.',
+    coreTop1:'Connected by account, drive, permissions', coreTop2:'Google AI stack', s1:'Search, chat, research', s2:'Drive, sources, access', s3:'Docs, sheets, video', s4:'API, CLI, agents', insight:'<strong>Context created once</strong> can flow into Search, Docs, Sheets, Slides, video, apps, and agents.<br>The advantage is not only model performance. It is the <strong>surface area of connected work</strong>.',
+    n5k:'Creation', n5r:'Asset transformation', n5h:'Knowledge becomes content and UI assets', n5p:'Veo, Flow, Vids, Pomelli, Mixboard, and Stitch transform research and brand context into video, ads, learning materials, and UI drafts.',
+    n6k:'Chrome Gemini', n6r:'Web context', n6h:'The browser joins the work surface', n6p:'Gemini in Chrome brings the current page, tabs, and search flow into conversation, linking web research with Workspace work.',
+    n7k:'App / API', n7r:'Productization', n7h:'Prompt experiments move into apps and backends', n7p:'AI Studio, Gemini API, Firebase, Cloud Run, and AppSheet turn prompt experiments into apps, data processing flows, and deployable services.',
+    n8k:'Agent / Ops', n8r:'Organizational execution', n8h:'Authorized agents expand execution', n8p:'With Antigravity, ADK, MCP, gcloud CLI, and Workspace CLI, the stack expands into organizational AI execution with tools, permissions, and logs.',
+    sig:'@marketer.ai.seulki · Google AI Ecosystem Map'
+  }
+};
+function setLang(lang){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach((el)=>{
+    const key = el.getAttribute('data-i18n');
+    if(Object.prototype.hasOwnProperty.call(copy[lang], key)) el.innerHTML = copy[lang][key];
+  });
+  document.querySelectorAll('[data-set-lang]').forEach((btn)=>{
+    const active = btn.getAttribute('data-set-lang') === lang;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+  try{ localStorage.setItem('googleAiEcosystemLang', lang); }catch(e){}
+}
+document.querySelectorAll('[data-set-lang]').forEach((btn)=>btn.addEventListener('click',()=>setLang(btn.getAttribute('data-set-lang'))));
+try{
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get('lang');
+  const saved = localStorage.getItem('googleAiEcosystemLang');
+  if(requested === 'en' || requested === 'ko') setLang(requested);
+  else if(saved === 'en') setLang('en');
+}catch(e){}
+</script>
+</body>
+</html>
