@@ -155,8 +155,47 @@
     }
     .course-banner__cta:hover { background: #174ea6; }
 
-    .top-taxonomy {
+    .controls-stack {
       width: min(780px, 54vw);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      position: relative;
+      z-index: 8;
+    }
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid rgba(32,33,36,.14);
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 10px 28px rgba(60,64,67,.10), inset 0 1px 0 rgba(255,255,255,.94);
+      backdrop-filter: blur(14px);
+    }
+    .lang-button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: transparent;
+      color: #5f6368;
+      font: 850 11px/1 'Inter','Noto Sans KR',sans-serif;
+      letter-spacing: -.08px;
+      cursor: pointer;
+      transition: background .18s ease, color .18s ease, box-shadow .18s ease;
+    }
+    .lang-button[aria-pressed="true"] {
+      color: #fff;
+      background: linear-gradient(135deg, #4285F4, #34A853);
+      box-shadow: 0 8px 18px rgba(66,133,244,.22);
+    }
+    .lang-button:focus-visible { outline: 2px solid rgba(66,133,244,.45); outline-offset: 2px; }
+
+    .top-taxonomy {
+      width: 100%;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
@@ -314,14 +353,14 @@
     }
     .edge-hub .hub-dot { fill: var(--hub-color, #5f6368); stroke: rgba(255,255,255,.92); stroke-width: 1.4; }
 
-    .node { cursor: pointer; }
-    .node circle.core { fill: #fffdf7; stroke: rgba(32,33,36,.26); stroke-width: 1.1; transition: .18s ease; }
-    .node circle.ring { fill: none; stroke-width: 2.9; stroke-linecap: round; opacity: .98; transition: .18s ease; }
-    .node text.icon { fill: #202124; font-size: 11px; font-weight: 800; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .node { cursor: pointer; color: var(--domain-color, #4285F4); }
+    .node circle.core { fill: var(--domain-color, #4285F4); stroke: var(--domain-color, #4285F4); stroke-width: 2.2; transition: .18s ease; }
+    .node circle.ring { fill: none; stroke: var(--domain-color, #4285F4); stroke-width: 4.8; stroke-linecap: round; opacity: 1; transition: .18s ease; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--domain-color, #4285F4) 48%, transparent)); }
+    .node text.icon { fill: #fff; font-size: 11px; font-weight: 900; text-anchor: middle; dominant-baseline: central; pointer-events: none; paint-order: stroke; stroke: rgba(32,33,36,.28); stroke-width: .7px; }
     .node text.label { fill: rgba(32,33,36,.78); font-size: 9.2px; font-weight: 650; letter-spacing: -.08px; pointer-events: none; transition: .18s ease; }
-    .node:hover circle.core, .node.hot circle.core { r: 16; fill: #fff; stroke: rgba(66,133,244,.48); filter: url(#nodeGlow); }
-    .node:hover circle.ring, .node.hot circle.ring { stroke-width: 4.2; filter: url(#softGlow); }
-    .node:hover text.label, .node.hot text.label { fill: #174ea6; }
+    .node:hover circle.core, .node.hot circle.core { r: 16; fill: var(--domain-color, #4285F4); stroke: var(--domain-color, #4285F4); stroke-width: 3; filter: url(#nodeGlow); }
+    .node:hover circle.ring, .node.hot circle.ring { stroke-width: 6.4; filter: url(#softGlow); }
+    .node:hover text.label, .node.hot text.label { fill: var(--domain-color, #174ea6); }
     .node.dimmed { opacity: .35; }
 
 
@@ -469,6 +508,7 @@
       body { overflow: auto; }
       .app { height: auto; min-height: 100vh; grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
       .header { flex-direction: column; }
+      .controls-stack { width: 100%; align-items: flex-start; }
       .top-taxonomy { width: 100%; }
       .viz-wrap { height: 780px; }
       .side-panel { min-height: 520px; }
@@ -482,33 +522,39 @@
   <main class="app">
     <header class="header">
       <div>
-        <div class="kicker"><span class="kicker-dot"></span> GOOGLE AI WORK TOOL MAP</div>
-        <h1>Google AI 업무 도구 분류 맵</h1>
-        <p class="subtitle">Google AI, Workspace, 개발·자동화 도구를 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong>으로 비교해 보는 인터랙티브 관계도입니다.</p>
-        <div class="course-banner" aria-label="일잘러를 위한 구글 AI 생태계 바이블 강의 배너">
-          <img src="https://seulkikaang.github.io/ai-survey-dashboard/google-banner.webp" alt="일잘러를 위한 구글 AI 생태계 바이블 배너 이미지" loading="lazy">
+        <div class="kicker"><span class="kicker-dot"></span><span id="kickerText">GOOGLE AI WORK TOOL MAP</span></div>
+        <h1 id="mainTitle">Google AI 업무 도구 분류 맵</h1>
+        <p class="subtitle" id="subtitle">Google AI, Workspace, 개발·자동화 도구를 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong>으로 비교해 보는 인터랙티브 관계도입니다.</p>
+        <div class="course-banner" id="courseBanner" aria-label="일잘러를 위한 구글 AI 생태계 바이블 강의 배너">
+          <img id="courseBannerImage" src="https://seulkikaang.github.io/ai-survey-dashboard/google-banner.webp" alt="일잘러를 위한 구글 AI 생태계 바이블 배너 이미지" loading="lazy">
           <div>
-            <p class="course-banner__eyebrow">일잘러를 위한 구글 AI 생태계 바이블</p>
-            <p class="course-banner__title">워크스페이스 연동부터 콘텐츠·서비스 자동화까지 w. only 구글</p>
-            <p class="course-banner__desc">Gemini를 포함한 구글 AI 생태계 전체를 실무에 적용하는 방법을 배워보세요. 워크스페이스 연동, 콘텐츠 자동화, 서비스 구축까지 구글만으로 완성하는 AI 업무 자동화 강의입니다.</p>
+            <p class="course-banner__eyebrow" id="courseEyebrow">일잘러를 위한 구글 AI 생태계 바이블</p>
+            <p class="course-banner__title" id="courseTitle">워크스페이스 연동부터 콘텐츠·서비스 자동화까지 w. only 구글</p>
+            <p class="course-banner__desc" id="courseDesc">Gemini를 포함한 구글 AI 생태계 전체를 실무에 적용하는 방법을 배워보세요. 워크스페이스 연동, 콘텐츠 자동화, 서비스 구축까지 구글만으로 완성하는 AI 업무 자동화 강의입니다.</p>
           </div>
-          <a class="course-banner__cta" href="https://fastcampus.co.kr/biz_online_googlebible?utm_source=kakao&amp;utm_medium=viral&amp;utm_campaign=prd^260323^260612&amp;utm_content=teacher^260612" target="_blank" rel="noopener noreferrer">강의 자세히 보기</a>
+          <a class="course-banner__cta" id="courseCta" href="https://fastcampus.co.kr/biz_online_googlebible?utm_source=kakao&amp;utm_medium=viral&amp;utm_campaign=prd^260323^260612&amp;utm_content=teacher^260612" target="_blank" rel="noopener noreferrer">강의 자세히 보기</a>
         </div>
       </div>
-      <section class="top-taxonomy attract" id="taxonomy" aria-label="분류 항목"></section>
-      <div class="pointer-cue pointer-cue--taxonomy"><span class="pointer-cue__icon">👆</span><span>분류칩 클릭</span></div>
+      <div class="controls-stack">
+        <div class="lang-toggle" aria-label="Language toggle">
+          <button type="button" class="lang-button" data-lang="ko" aria-pressed="true">🇰🇷 KR</button>
+          <button type="button" class="lang-button" data-lang="en" aria-pressed="false">🇺🇸 EN</button>
+        </div>
+        <section class="top-taxonomy attract" id="taxonomy" aria-label="분류 항목"></section>
+      </div>
+      <div class="pointer-cue pointer-cue--taxonomy"><span class="pointer-cue__icon">👆</span><span id="taxonomyCueText">분류칩 클릭</span></div>
     </header>
 
     <section class="viz-wrap" aria-label="Google AI tool relationship map">
       <div class="group-note" id="groupNote">
         <div class="group-emoji">🧭</div>
         <div class="group-text">
-          <strong>분류칩이나 툴을 클릭하면 관계가 열립니다</strong>
-          <p>오른쪽 상단 상자와 원형 툴 노드에서 원하는 기준을 선택하세요.</p>
+          <strong id="groupNoteTitle">분류칩이나 툴을 클릭하면 관계가 열립니다</strong>
+          <p id="groupNoteBody">오른쪽 상단 상자와 원형 툴 노드에서 원하는 기준을 선택하세요.</p>
         </div>
       </div>
 
-      <div class="pointer-cue pointer-cue--tools"><span class="pointer-cue__icon">👆</span><span>툴 원 클릭</span></div>
+      <div class="pointer-cue pointer-cue--tools"><span class="pointer-cue__icon">👆</span><span id="toolCueText">툴 원 클릭</span></div>
 
       <svg id="viz" viewBox="0 0 960 860" role="img">
         <defs>
@@ -529,12 +575,12 @@
         <g id="domainLabels"></g>
       </svg>
 
-      <div class="signature">click a taxonomy chip or a tool node</div>
+      <div class="signature" id="signatureText">click a taxonomy chip or a tool node</div>
     </section>
 
     <aside class="side-panel" aria-label="비교 표">
       <div class="side-head">
-        <div class="side-kicker">COMPARISON TABLE</div>
+        <div class="side-kicker" id="sideKicker">COMPARISON TABLE</div>
         <h2 class="side-title" id="tableTitle">묶음별 툴 비교</h2>
         <p class="side-desc" id="tableDesc">분류 항목을 클릭하면, 그 묶음 안에서 각 툴이 어떤 업무에 쓰이는지 비교표로 바뀝니다.</p>
       </div>
@@ -553,6 +599,159 @@
   </div>
 
   <script>
+    const i18n = {
+      ko: {
+        documentTitle: 'Google AI 업무 도구 분류 맵',
+        kicker: 'GOOGLE AI WORK TOOL MAP',
+        title: 'Google AI 업무 도구 분류 맵',
+        subtitleHTML: 'Google AI, Workspace, 개발·자동화 도구를 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong>으로 비교해 보는 인터랙티브 관계도입니다.',
+        courseAria: '일잘러를 위한 구글 AI 생태계 바이블 강의 배너',
+        courseImageAlt: '일잘러를 위한 구글 AI 생태계 바이블 배너 이미지',
+        courseEyebrow: '일잘러를 위한 구글 AI 생태계 바이블',
+        courseTitle: '워크스페이스 연동부터 콘텐츠·서비스 자동화까지 w. only 구글',
+        courseDesc: 'Gemini를 포함한 구글 AI 생태계 전체를 실무에 적용하는 방법을 배워보세요. 워크스페이스 연동, 콘텐츠 자동화, 서비스 구축까지 구글만으로 완성하는 AI 업무 자동화 강의입니다.',
+        courseCta: '강의 자세히 보기',
+        taxonomyAria: '분류 항목',
+        taxonomyCue: '분류칩 클릭',
+        toolCue: '툴 원 클릭',
+        signature: 'click a taxonomy chip or a tool node',
+        sideKicker: 'COMPARISON TABLE',
+        tableDefaultTitle: '묶음별 툴 비교',
+        tableDefaultDesc: '분류 항목을 클릭하면, 그 묶음 안에서 각 툴이 어떤 업무에 쓰이는지 비교표로 바뀝니다.',
+        emptyStateHTML: '오른쪽 상단의 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.',
+        groupDefaultTitle: '분류칩이나 툴을 클릭하면 관계가 열립니다',
+        groupDefaultBody: '오른쪽 상단 상자와 원형 툴 노드에서 원하는 기준을 선택하세요.',
+        groupFallback: '선택한 기준에 해당하는 도구가 공통 허브로 연결됩니다.',
+        groupBodyActive: '툴끼리 모두 엮지 않고, 선택한 기준에 속한 툴만 한 기준점으로 모아 보여줍니다.',
+        tableGroupDesc: (label, count) => `${label} 기준으로 묶인 ${count}개 도구가 실제 업무에서 어떻게 다르게 쓰이는지 비교합니다.`,
+        toolDetailSuffix: '상세',
+        toolDetailDesc: '원 안의 툴을 클릭하면 이 영역에서 대표 이미지와 설명을 확인할 수 있습니다.',
+        compareSuffix: '비교표',
+        thumbAlt: '대표 이미지',
+        lightboxDefault: '이미지 확대 보기',
+        close: '닫기',
+        tableHeads: ['툴','분야','사용 난이도','활용 방식','구분 포인트'],
+        taxonomyLabels: { domain: '분야', function: '사용 난이도', usage: '활용 방식' },
+        taxonomyCodes: { domain: 'FIELD', function: 'LEVEL', usage: 'USE' },
+        typeLabels: { domain: '분야', function: '사용 난이도', usage: '활용 방식' },
+        terms: {}
+      },
+      en: {
+        documentTitle: 'Google AI Work Tool Map',
+        kicker: 'GOOGLE AI WORK TOOL MAP',
+        title: 'Google AI Work Tool Map',
+        subtitleHTML: 'An interactive map that compares Google AI, Workspace, and developer automation tools by <strong>domain</strong>, <strong>adoption level</strong>, and <strong>work use case</strong>.',
+        courseAria: 'FastCampus Google AI ecosystem course banner',
+        courseImageAlt: 'FastCampus Google AI ecosystem course banner image',
+        courseEyebrow: 'Google AI Ecosystem Bible for Work',
+        courseTitle: 'From Workspace integration to content and service automation, built with Google',
+        courseDesc: 'Learn how to apply the full Google AI ecosystem, including Gemini, to everyday work: Workspace integration, content automation, and service building with Google tools.',
+        courseCta: 'View course',
+        taxonomyAria: 'Classification filters',
+        taxonomyCue: 'Click a chip',
+        toolCue: 'Click a tool',
+        signature: 'click a taxonomy chip or a tool node',
+        sideKicker: 'COMPARISON TABLE',
+        tableDefaultTitle: 'Tool comparison by group',
+        tableDefaultDesc: 'Click a classification chip to compare how tools in the same group are used at work.',
+        emptyStateHTML: 'Click a <strong>domain</strong>, <strong>adoption level</strong>, or <strong>work use case</strong> chip in the top-right panel to open the comparison table.',
+        groupDefaultTitle: 'Click a chip or a tool to open the relationships',
+        groupDefaultBody: 'Choose a criterion from the top-right panel or a node in the circular map.',
+        groupFallback: 'Tools that match the selected criterion are connected to a shared hub.',
+        groupBodyActive: 'Instead of drawing every tool-to-tool line, the map gathers only the selected tools around one shared criterion hub.',
+        tableGroupDesc: (label, count) => `${count} tools grouped by ${label}, compared by how they differ in practical work.`,
+        toolDetailSuffix: 'detail',
+        toolDetailDesc: 'Click a tool node in the circle to see its representative image and explanation here.',
+        compareSuffix: 'comparison',
+        thumbAlt: 'representative image',
+        lightboxDefault: 'Image preview',
+        close: 'Close',
+        tableHeads: ['Tool','Domain','Adoption level','Work use case','Distinction'],
+        taxonomyLabels: { domain: 'Domain', function: 'Adoption level', usage: 'Work use case' },
+        taxonomyCodes: { domain: 'FIELD', function: 'LEVEL', usage: 'USE' },
+        typeLabels: { domain: 'domain', function: 'adoption level', usage: 'work use case' },
+        terms: {
+          'Google AI': 'Google AI', '리서치·학습': 'Research & Learning', 'Workspace': 'Workspace', '이미지·영상·콘텐츠': 'Image, Video & Content', '앱·서비스': 'Apps & Services', '개발·자동화': 'Development & Automation',
+          '바로 사용': 'Ready to use', '설정 필요': 'Setup required', '학습 필요': 'Learning required', '훈련 필요': 'Training required',
+          '일상 업무 보조': 'Everyday work assistance', '자료 기반 생성': 'Source-grounded generation', '자료 조사·아이디어 기획': 'Research & ideation', '문서·보고서·데이터': 'Documents, reports & data', '회의·커뮤니케이션 정리': 'Meetings & communication', '제안서·발표 준비': 'Proposals & presentations', '홍보·마케팅': 'Promotion & marketing', '반복 업무 자동화': 'Routine work automation', '업무용 도구 만들기': 'Building work tools', '에이전트 자동화': 'Agent automation'
+        }
+      }
+    };
+
+    const groupDescriptionsEn = {
+      'Google AI': ['🧠', 'Google AI', 'The general AI layer where Gemini connects search, browser context, live conversation, and model experimentation.'],
+      '리서치·학습': ['📚', 'Research & Learning', 'Tools for collecting, reading, and comparing materials before decisions are made.'],
+      'Workspace': ['💼', 'Workspace', 'The everyday work surface where AI appears inside email, documents, sheets, meetings, and presentations.'],
+      '이미지·영상·콘텐츠': ['🎬', 'Image, Video & Content', 'The creation layer that turns ideas into visible assets such as images, videos, moodboards, and campaign material.'],
+      '앱·서비스': ['🧩', 'Apps & Services', 'The layer for turning work ideas into apps, AI mini-apps, UI flows, and service backends.'],
+      '개발·자동화': ['⚙️', 'Development & Automation', 'The automation layer for scripts, CLIs, agents, and open models that run repeatable work.'],
+      '바로 사용': ['⚡', 'Ready to use', 'Tools you can try immediately inside your account without extra setup or structure.'],
+      '설정 필요': ['🧩', 'Setup required', 'Tools that need an initial setup step such as uploading sources, connecting data, or defining conditions.'],
+      '학습 필요': ['📚', 'Learning required', 'Tools that improve when you understand their workflow, prompting style, and editing criteria.'],
+      '훈련 필요': ['🏋️', 'Training required', 'Tools that need to be shaped around agents, models, or repeatable workflows.'],
+      '일상 업무 보조': ['✨', 'Everyday work assistance', 'Fast help for questions, drafts, summaries, explanations, and search support during work.'],
+      '자료 기반 생성': ['📚', 'Source-grounded generation', 'Answers, drafts, and summaries generated from the materials or knowledge you provide.'],
+      '자료 조사·아이디어 기획': ['🧭', 'Research & ideation', 'Exploration, source review, case comparison, and idea development for new topics.'],
+      '문서·보고서·데이터': ['📄', 'Documents, reports & data', 'Creating and organizing documents, reports, tables, and data inputs.'],
+      '회의·커뮤니케이션 정리': ['🤝', 'Meetings & communication', 'Capturing and organizing meetings, emails, forms, and communication flows.'],
+      '제안서·발표 준비': ['📽️', 'Proposals & presentations', 'Preparing slides, explanatory videos, and proposal materials.'],
+      '홍보·마케팅': ['📣', 'Promotion & marketing', 'Producing campaign assets, promotional copy, and visual content for external audiences.'],
+      '반복 업무 자동화': ['🔁', 'Routine work automation', 'Turning repeated email, sheet, document, approval, and cleanup tasks into automated flows.'],
+      '업무용 도구 만들기': ['🧱', 'Building work tools', 'Quickly building internal tools for requests, checks, management, and lookup workflows.'],
+      '에이전트 자동화': ['🤖', 'Agent automation', 'Creating agents, CLIs, and development automation that handle multi-step work.']
+    };
+
+    const toolDescEn = {
+      'Gemini': 'The default AI entry point for questions, writing, summarizing, translation, and ideation. It helps unblock everyday work quickly.',
+      'Gem': 'A way to save repeatable instructions and roles as a customized AI assistant. It can reflect team rules or personal work patterns.',
+      'Gemini Live': 'A live voice conversation interface for thinking out loud. Useful for meeting prep, explanation practice, and quick Q&A.',
+      'Google AI Studio': 'A workspace for testing Gemini models and API-based prototypes. It connects prompt experiments to development.',
+      'AI Mode': 'A search experience that explores results through AI-generated answers. Useful for quickly framing concepts and comparison points.',
+      'Gemini in Chrome': 'AI assistance that uses the context of the webpage you are viewing. Useful for summarizing pages, comparing information, and deciding next actions.',
+      'Deep Research': 'A research feature that gathers multiple sources and turns them into report-like output. Useful for markets, cases, policies, and technical comparisons.',
+      'NotebookLM': 'A source-grounded tool for summarizing, asking questions, and studying uploaded materials. Useful for rereading long documents with evidence.',
+      'Gmail AI': 'AI inside Gmail for drafting, replying, and summarizing messages. It reduces time spent on repetitive communication.',
+      'Doc AI': 'AI assistance in Docs for drafting, summarizing, and polishing writing. Useful for reports, guides, and internal documents.',
+      'Sheets AI': 'AI inside spreadsheets for table cleanup, formulas, and data interpretation. Useful for reducing repetitive input and simple analysis work.',
+      'Slides AI': 'AI assistance for slide drafts, structure, and presentation material. It helps convert documents or ideas into a presentation flow.',
+      'Meet AI': 'AI in Meet for summarizing meetings and capturing action items. It reduces follow-up and sharing time after meetings.',
+      'Forms AI': 'AI assistance for building surveys, request forms, and feedback questions. Useful for quickly structuring response collection.',
+      'Workspace Studio': 'A tool for turning repeated Workspace work into automated flows. It can connect email, documents, and sheets through conditions and actions.',
+      'Workspace CLI': 'A developer-facing interface for controlling Workspace through commands. Useful for scripting repeatable work around docs, accounts, and files.',
+      'Vids': 'A Google Workspace tool for creating work explainers and internal videos. Useful when video communicates faster than a document.',
+      'Nano Banana': 'A visual creation tool for image generation and editing. Useful for product explanations, guide images, and campaign assets.',
+      'Flow': 'A generative video tool that turns scenarios and scene flows into video. Useful for short promotional or explanatory content drafts.',
+      'Pomeli': 'A content creation tool closer to brand and marketing asset production. Useful for pairing visual direction with campaign copy.',
+      'Mixboard': 'A moodboard-style tool for collecting images and references. Useful for aligning design tone, campaign mood, and visual concepts.',
+      'Text FX': 'A text generation and language experimentation tool. Useful for sentence variations, copy options, and short-form text experiments.',
+      'Disco': 'A discovery-oriented tool for exploring materials around a topic. Useful for widening research scope or finding early ideas.',
+      'AppSheet': 'A no-code tool for building work apps from spreadsheet data. Useful for checklists, requests, management, and field records.',
+      'Opal': 'A tool for creating AI mini-apps from prompts and simple configurations. Useful for internal assistants and lightweight app prototypes.',
+      'Firebase': 'A platform for app authentication, databases, hosting, and backend services. Useful when a work tool needs to become a real service.',
+      'Stitch': 'A tool for quickly shaping app screens or UI flows. Useful for turning an idea into a work interface draft.',
+      'Apps Script': 'A scripting tool for automating Google Workspace tasks. Strong for sheets processing, email sending, and document generation.',
+      'Antigravity': 'A development automation tool where AI agents help write, run, and verify code. Useful for handing repeatable development work to agents.',
+      'ADK': 'A development kit for designing and running AI agents. Useful for building automation structures that handle multiple steps.',
+      'gcloud CLI': 'A command-line tool for managing Google Cloud resources. It makes deployment, setup, and operations repeatable and automatable.',
+      'Gemma': 'Google\'s open model family for local and custom AI experiments. Useful for lightweight model comparison and internal environment testing.'
+    };
+
+    const supportedLangs = ['ko', 'en'];
+    const queryLang = new URLSearchParams(location.search).get('lang');
+    const savedLang = localStorage.getItem('googleAiToolMapLang');
+    let currentLang = supportedLangs.includes(queryLang) ? queryLang : supportedLangs.includes(savedLang) ? savedLang : 'ko';
+    let activeToolId = null;
+
+    function ui(key) { return i18n[currentLang][key]; }
+    function term(value) { return i18n[currentLang].terms[value] || value; }
+    function displayTermValue(value) { return Array.isArray(value) ? value.map(term).join(' · ') : term(value); }
+    function typeLabel(type) { return i18n[currentLang].typeLabels[type]; }
+    function groupInfo(name) {
+      if (currentLang === 'en') return groupDescriptionsEn[name] || ['🔗', term(name), ui('groupFallback')];
+      return groupDescriptions[name] || ['🔗', name, ui('groupFallback')];
+    }
+    function descForTool(t) { return currentLang === 'en' ? (toolDescEn[t.name] || t.desc) : t.desc; }
+
     const domainOrder = ['Google AI', '리서치·학습', 'Workspace', '이미지·영상·콘텐츠', '앱·서비스', '개발·자동화'];
     const domainColors = {
       'Google AI': '#4285F4',
@@ -575,7 +774,7 @@
     const usageToolOrder = {
       '일상 업무 보조': ['Gemini', 'Gemini Live', 'Gemini in Chrome', 'AI Mode'],
       '자료 기반 생성': ['Gem', 'NotebookLM'],
-      '자료 조사·아이디어 기획': ['Deep Research', 'Mixboard', 'Text FL'],
+      '자료 조사·아이디어 기획': ['Deep Research', 'Mixboard', 'Text FX'],
       '문서·보고서·데이터': ['Doc AI', 'Sheets AI'],
       '회의·커뮤니케이션 정리': ['Meet AI', 'Forms AI', 'Gmail AI'],
       '제안서·발표 준비': ['Slides AI', 'Vids'],
@@ -612,35 +811,35 @@
       {name:'Gemini', icon:'✦', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'질문, 글쓰기, 요약, 번역, 아이디어 정리에 쓰는 기본 AI입니다. 업무 중 막히는 지점을 빠르게 풀어주는 출발점 역할을 합니다.'},
       {name:'Gem', icon:'◆', domain:'Google AI', function:'설정 필요', usage:'자료 기반 생성', desc:'반복해서 쓰는 지시와 역할을 저장해 맞춤형 AI처럼 쓰는 도구입니다. 팀별 업무 규칙이나 개인 작업 방식에 맞춰 사용할 수 있습니다.'},
       {name:'Gemini Live', icon:'◉', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'음성으로 실시간 대화하며 생각을 정리하는 방식의 AI입니다. 회의 전 준비, 설명 연습, 빠른 질의응답에 어울립니다.'},
-      {name:'Google AI Studio', icon:'AI', domain:'Google AI', function:'설정 필요', usage:'업무용 도구 만들기', desc:'Gemini 모델을 테스트하고 API 기반 프로토타입을 만드는 공간입니다. 프롬프트와 모델 반응을 실험한 뒤 개발로 연결할 수 있습니다.'},
+      {name:'Google AI Studio', icon:'AI', domain:'Google AI', function:'학습 필요', usage:'업무용 도구 만들기', desc:'Gemini 모델을 테스트하고 API 기반 프로토타입을 만드는 공간입니다. 프롬프트와 모델 반응을 실험한 뒤 개발로 연결할 수 있습니다.'},
       {name:'AI Mode', icon:'⌕', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'검색 결과를 AI 답변 형태로 탐색하는 검색 경험입니다. 자료 조사 초반에 개념과 비교 포인트를 빠르게 잡을 수 있습니다.'},
       {name:'Gemini in Chrome', icon:'🌐', domain:'Google AI', function:'바로 사용', usage:'일상 업무 보조', desc:'브라우저에서 보고 있는 웹페이지 맥락을 활용하는 AI 보조 기능입니다. 페이지 요약, 비교, 다음 행동 정리에 적합합니다.'},
-      {name:'Deep Research', icon:'DR', domain:'리서치·학습', function:'학습 필요', usage:'자료 조사·아이디어 기획', desc:'복잡한 주제에 대해 여러 자료를 찾아 보고서 형태로 정리하는 리서치 기능입니다. 시장, 사례, 정책, 기술 비교처럼 깊이가 필요한 조사에 맞습니다.'},
+      {name:'Deep Research', icon:'DR', domain:'리서치·학습', function:'바로 사용', usage:'자료 조사·아이디어 기획', desc:'복잡한 주제에 대해 여러 자료를 찾아 보고서 형태로 정리하는 리서치 기능입니다. 시장, 사례, 정책, 기술 비교처럼 깊이가 필요한 조사에 맞습니다.'},
       {name:'NotebookLM', icon:'NB', domain:'리서치·학습', function:'설정 필요', usage:'자료 기반 생성', desc:'올려둔 자료를 기준으로 요약, 질의응답, 학습 정리를 해주는 도구입니다. 내부 문서나 긴 자료를 근거 기반으로 다시 읽을 때 유용합니다.'},
-      {name:'Disco', icon:'◌', domain:'앱·서비스', function:'학습 필요', usage:'업무용 도구 만들기', desc:'관심 주제와 관련된 자료를 발견하고 탐색하는 성격의 도구입니다. 조사 범위를 넓히거나 초기 아이디어를 찾을 때 쓸 수 있습니다.'},
       {name:'Gmail AI', icon:'✉', domain:'Workspace', function:'바로 사용', usage:'회의·커뮤니케이션 정리', desc:'메일 초안, 답장, 요약을 도와주는 Gmail 안의 AI 기능입니다. 반복적인 커뮤니케이션 작성 시간을 줄이는 데 적합합니다.'},
       {name:'Doc AI', icon:'DOC', domain:'Workspace', function:'바로 사용', usage:'문서·보고서·데이터', desc:'문서 초안 작성, 요약, 문장 다듬기를 도와주는 Docs 기반 AI입니다. 보고서나 안내문을 빠르게 정리할 때 쓸 수 있습니다.'},
       {name:'Sheets AI', icon:'▦', domain:'Workspace', function:'바로 사용', usage:'문서·보고서·데이터', desc:'스프레드시트 안에서 표 정리, 함수, 데이터 해석을 돕는 AI입니다. 반복 입력과 간단한 분석 작업을 줄이는 데 좋습니다.'},
       {name:'Slides AI', icon:'▣', domain:'Workspace', function:'바로 사용', usage:'제안서·발표 준비', desc:'슬라이드 초안, 구조, 발표 자료 생성을 보조하는 기능입니다. 문서나 아이디어를 발표용 흐름으로 바꾸는 데 쓰입니다.'},
       {name:'Meet AI', icon:'🎙', domain:'Workspace', function:'바로 사용', usage:'회의·커뮤니케이션 정리', desc:'회의 내용을 요약하고 액션아이템을 정리하는 Meet 기반 AI입니다. 회의 후 정리와 공유 시간을 줄여줍니다.'},
       {name:'Forms AI', icon:'⌁', domain:'Workspace', function:'바로 사용', usage:'회의·커뮤니케이션 정리', desc:'설문, 신청서, 피드백 폼의 문항 구성을 돕는 기능입니다. 응답 수집 구조를 빠르게 만들 때 유용합니다.'},
-      {name:'Workspace Studio', icon:'WS', domain:'Workspace', function:'설정 필요', usage:'반복 업무 자동화', desc:'Workspace 안의 반복 업무를 자동화 흐름으로 만드는 도구입니다. 메일, 문서, 시트 작업을 조건과 실행으로 묶을 수 있습니다.'},
+      {name:'Workspace Studio', icon:'WS', domain:'Workspace', function:'학습 필요', usage:'반복 업무 자동화', desc:'Workspace 안의 반복 업무를 자동화 흐름으로 만드는 도구입니다. 메일, 문서, 시트 작업을 조건과 실행으로 묶을 수 있습니다.'},
       {name:'Workspace CLI', icon:'CLI', domain:'Workspace', function:'훈련 필요', usage:'에이전트 자동화', desc:'Workspace 작업을 명령어로 다루는 개발자용 인터페이스입니다. 문서, 계정, 파일 관련 반복 작업을 스크립트화할 때 쓰입니다.'},
-      {name:'Vids', icon:'▶', domain:'Workspace', function:'학습 필요', usage:'제안서·발표 준비', desc:'업무용 설명 영상과 안내 영상을 만드는 Google Workspace 도구입니다. 문서보다 영상이 더 빠른 전달 상황에 사용할 수 있습니다.'},
-      {name:'Nano Banana', icon:'🍌', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'홍보·마케팅', desc:'이미지 생성과 편집에 쓰이는 시각 제작 도구입니다. 제품 설명, 안내 이미지, 캠페인 소재처럼 눈에 보이는 결과물을 만들 때 맞습니다.'},
+      {name:'Vids', icon:'▶', domain:'Workspace', function:'바로 사용', usage:'제안서·발표 준비', desc:'업무용 설명 영상과 안내 영상을 만드는 Google Workspace 도구입니다. 문서보다 영상이 더 빠른 전달 상황에 사용할 수 있습니다.'},
+      {name:'Nano Banana', icon:'🍌', domain:'이미지·영상·콘텐츠', function:'바로 사용', usage:'홍보·마케팅', desc:'이미지 생성과 편집에 쓰이는 시각 제작 도구입니다. 제품 설명, 안내 이미지, 캠페인 소재처럼 눈에 보이는 결과물을 만들 때 맞습니다.'},
       {name:'Flow', icon:'〰', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'홍보·마케팅', desc:'시나리오와 장면 흐름을 영상으로 만드는 생성형 영상 도구입니다. 짧은 홍보 영상이나 설명형 콘텐츠 초안에 활용할 수 있습니다.'},
-      {name:'Pomeli', icon:'✧', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'홍보·마케팅', desc:'브랜드와 마케팅 소재 제작에 가까운 콘텐츠 생성 도구입니다. 안내 이미지, 캠페인 시안, 홍보 문구와 비주얼을 함께 잡을 때 좋습니다.'},
-      {name:'Mixboard', icon:'◍', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'자료 조사·아이디어 기획', desc:'이미지와 레퍼런스를 모아 무드보드처럼 방향을 잡는 도구입니다. 디자인 톤, 캠페인 분위기, 시각 콘셉트를 정리할 때 유용합니다.'},
-      {name:'Text FL', icon:'T', domain:'이미지·영상·콘텐츠', function:'학습 필요', usage:'자료 조사·아이디어 기획', desc:'텍스트 생성과 언어 실험에 가까운 도구로 볼 수 있습니다. 문장 변형, 카피 후보, 짧은 텍스트 실험에 활용할 수 있습니다.'},
-      {name:'AppSheet', icon:'APP', domain:'앱·서비스', function:'설정 필요', usage:'업무용 도구 만들기', desc:'스프레드시트 데이터를 기반으로 업무용 앱을 만드는 노코드 도구입니다. 점검, 신청, 관리, 현장 기록 앱을 빠르게 만들 수 있습니다.'},
-      {name:'Opal', icon:'◇', domain:'앱·서비스', function:'설정 필요', usage:'반복 업무 자동화', desc:'프롬프트와 간단한 구성을 바탕으로 AI 미니앱을 만드는 도구입니다. 사내 업무 보조 도구나 실험용 앱 프로토타입에 어울립니다.'},
-      {name:'Firebase', icon:'🔥', domain:'앱·서비스', function:'설정 필요', usage:'업무용 도구 만들기', desc:'앱의 인증, 데이터베이스, 호스팅 같은 백엔드를 제공하는 플랫폼입니다. 실제 서비스로 이어지는 업무용 도구를 만들 때 필요합니다.'},
-      {name:'Stitch', icon:'ST', domain:'앱·서비스', function:'설정 필요', usage:'업무용 도구 만들기', desc:'앱 화면이나 UI 흐름을 빠르게 구성하는 도구로 볼 수 있습니다. 아이디어를 업무용 화면 초안으로 바꾸는 데 쓰입니다.'},
+      {name:'Pomeli', icon:'✧', domain:'이미지·영상·콘텐츠', function:'설정 필요', usage:'홍보·마케팅', desc:'브랜드와 마케팅 소재 제작에 가까운 콘텐츠 생성 도구입니다. 안내 이미지, 캠페인 시안, 홍보 문구와 비주얼을 함께 잡을 때 좋습니다.'},
+      {name:'Mixboard', icon:'◍', domain:'이미지·영상·콘텐츠', function:'바로 사용', usage:'자료 조사·아이디어 기획', desc:'이미지와 레퍼런스를 모아 무드보드처럼 방향을 잡는 도구입니다. 디자인 톤, 캠페인 분위기, 시각 콘셉트를 정리할 때 유용합니다.'},
+      {name:'Text FX', icon:'T', domain:'이미지·영상·콘텐츠', function:'바로 사용', usage:'자료 조사·아이디어 기획', desc:'텍스트 생성과 언어 실험에 가까운 도구로 볼 수 있습니다. 문장 변형, 카피 후보, 짧은 텍스트 실험에 활용할 수 있습니다.'},
+      {name:'Disco', icon:'◌', domain:'앱·서비스', function:'학습 필요', usage:'업무용 도구 만들기', desc:'관심 주제와 관련된 자료를 발견하고 탐색하는 성격의 도구입니다. 조사 범위를 넓히거나 초기 아이디어를 찾을 때 쓸 수 있습니다.'},
+      {name:'AppSheet', icon:'APP', domain:'앱·서비스', function:'훈련 필요', usage:'업무용 도구 만들기', desc:'스프레드시트 데이터를 기반으로 업무용 앱을 만드는 노코드 도구입니다. 점검, 신청, 관리, 현장 기록 앱을 빠르게 만들 수 있습니다.'},
+      {name:'Opal', icon:'◇', domain:'앱·서비스', function:'학습 필요', usage:'반복 업무 자동화', desc:'프롬프트와 간단한 구성을 바탕으로 AI 미니앱을 만드는 도구입니다. 사내 업무 보조 도구나 실험용 앱 프로토타입에 어울립니다.'},
+      {name:'Firebase', icon:'🔥', domain:'앱·서비스', function:'훈련 필요', usage:'업무용 도구 만들기', desc:'앱의 인증, 데이터베이스, 호스팅 같은 백엔드를 제공하는 플랫폼입니다. 실제 서비스로 이어지는 업무용 도구를 만들 때 필요합니다.'},
+      {name:'Stitch', icon:'ST', domain:'앱·서비스', function:'바로 사용', usage:'업무용 도구 만들기', desc:'앱 화면이나 UI 흐름을 빠르게 구성하는 도구로 볼 수 있습니다. 아이디어를 업무용 화면 초안으로 바꾸는 데 쓰입니다.'},
       {name:'Apps Script', icon:'</>', domain:'개발·자동화', function:'설정 필요', usage:'반복 업무 자동화', desc:'Google Workspace 작업을 코드로 자동화하는 스크립트 도구입니다. 시트 처리, 메일 발송, 문서 생성 같은 반복 작업에 강합니다.'},
       {name:'Antigravity', icon:'AG', domain:'개발·자동화', function:'훈련 필요', usage:'에이전트 자동화', desc:'AI 에이전트가 코드 작성, 실행, 검증 흐름을 함께 처리하도록 돕는 개발 자동화 도구입니다. 반복되는 개발 작업을 에이전트 중심으로 넘길 때 쓰입니다.'},
       {name:'ADK', icon:'🤖', domain:'개발·자동화', function:'훈련 필요', usage:'에이전트 자동화', desc:'AI 에이전트를 설계하고 실행하기 위한 개발 도구 묶음입니다. 여러 단계를 스스로 처리하는 업무 자동화 구조를 만들 때 쓰입니다.'},
       {name:'gcloud CLI', icon:'☁', domain:'개발·자동화', function:'훈련 필요', usage:['업무용 도구 만들기','에이전트 자동화'], desc:'Google Cloud 리소스를 명령어로 관리하는 도구입니다. 배포, 설정, 운영 작업을 자동화하거나 재현 가능하게 만듭니다.'},
-      {name:'Gemma', icon:'GM', domain:'개발·자동화', function:'훈련 필요', usage:'에이전트 자동화', desc:'Google의 오픈 모델 계열로, 로컬·커스텀 AI 실험에 쓰입니다. 가벼운 모델 비교나 내부 환경 테스트에 활용할 수 있습니다.'}
+      {name:'Gemma', icon:'GM', domain:'개발·자동화', function:'설정 필요', usage:'에이전트 자동화', desc:'Google의 오픈 모델 계열로, 로컬·커스텀 AI 실험에 쓰입니다. 가벼운 모델 비교나 내부 환경 테스트에 활용할 수 있습니다.'}
     ];
 
     tools.forEach((d, i) => d.id = i);
@@ -707,9 +906,10 @@
     function allGroups() { return [...groupsFor('domain'), ...groupsFor('function'), ...groupsFor('usage')]; }
 
     function renderTaxonomy() {
-      const labels = { domain: '분야', function: '사용 난이도', usage: '활용 방식' };
-      const codes = { domain: 'FIELD', function: 'LEVEL', usage: 'USE' };
+      const labels = i18n[currentLang].taxonomyLabels;
+      const codes = i18n[currentLang].taxonomyCodes;
       taxonomy.innerHTML = '';
+      taxonomy.setAttribute('aria-label', ui('taxonomyAria'));
       ['domain','function','usage'].forEach(type => {
         const col = document.createElement('div');
         col.className = 'tax-col';
@@ -718,7 +918,7 @@
         groupsFor(type).forEach(g => {
           const b = document.createElement('button');
           b.className = `tax-chip ${type === 'domain' ? 'domain-chip' : ''} ${type === 'function' ? 'level-chip' : ''}`;
-          b.textContent = g.name;
+          b.textContent = term(g.name);
           b.dataset.type = type;
           b.dataset.name = g.name;
           if (type === 'domain') b.style.setProperty('--chip-color', domainColors[g.name]);
@@ -756,11 +956,12 @@
         const lx = cx + Math.cos(mid) * (r + 92);
         const ly = cy + Math.sin(mid) * (r + 92);
         const labelG = el('g', { transform: `translate(${lx},${ly})` }, domainLabelsG);
-        const w = Math.max(74, domain.length * 12 + 24);
+        const domainLabel = term(domain);
+        const w = Math.max(74, domainLabel.length * 10.5 + 24);
         el('rect', { class: 'domain-label-bg', x: -w/2, y: -17, width: w, height: 34, rx: 17 }, labelG);
         el('circle', { class: 'domain-label-dot', cx: -w/2 + 17, cy: 0, r: 5.3, fill: color }, labelG);
         const text = el('text', { class: 'domain-label-text', x: 8, y: 0 }, labelG);
-        text.textContent = domain;
+        text.textContent = domainLabel;
       });
     }
 
@@ -824,8 +1025,9 @@
     function renderNodes() {
       clear(nodesG);
       tools.forEach(t => {
-        const g = el('g', { class: 'node', transform: `translate(${t.x}, ${t.y})`, 'data-id': t.id }, nodesG);
-        el('circle', { class: 'ring', r: 18, stroke: domainColors[t.domain] }, g);
+        const fieldColor = domainColors[t.domain];
+        const g = el('g', { class: 'node', transform: `translate(${t.x}, ${t.y})`, style: `--domain-color:${fieldColor}`, 'data-id': t.id }, nodesG);
+        el('circle', { class: 'ring', r: 18, stroke: fieldColor }, g);
         el('circle', { class: 'core', r: 13 }, g);
         const icon = el('text', { class: 'icon', y: .5 }, g); icon.textContent = t.icon;
         const lx = Math.cos(t.angle) * -36;
@@ -873,7 +1075,7 @@
         'Gemini Live': 'gemini-live.png',
         'AI Mode': 'ai-mode.png',
         'Gemini in Chrome': 'chrome-gemini.png',
-        'Text FL': 'text-fx.png',
+        'Text FX': 'text-fx.png',
         'Gemma': 'gemma.png'
       };
       return direct[t.name] ? `google-ai-tools-chord-visualization-assets/${direct[t.name]}` : '';
@@ -884,43 +1086,43 @@
       const src = imageForTool(t);
       if (!src) return '';
       return `<div class="tool-thumb ${large ? 'tool-detail-hero' : ''}" style="--tool-color:${color}">
-        <img src="${src}" alt="${t.name} 대표 이미지" loading="lazy">
+        <img src="${src}" alt="${t.name} ${ui('thumbAlt')}" loading="lazy">
       </div>`;
     }
 
     function renderToolDetail(t) {
-      tableTitle.textContent = `${t.name} 상세`;
-      tableDesc.textContent = '원 안의 툴을 클릭하면 이 영역에서 대표 이미지와 설명을 확인할 수 있습니다.';
+      tableTitle.textContent = `${t.name} ${ui('toolDetailSuffix')}`;
+      tableDesc.textContent = ui('toolDetailDesc');
       tableWrap.innerHTML = `
         <div class="tool-detail">
           ${toolThumbHTML(t, true)}
           <h3>${t.name}</h3>
-          <p>${t.desc}</p>
-          <div class="detail-tags"><span>${displayValue(t.domain)}</span><span>${displayValue(t.function)}</span><span>${displayValue(t.usage)}</span></div>
+          <p>${descForTool(t)}</p>
+          <div class="detail-tags"><span>${displayTermValue(t.domain)}</span><span>${displayTermValue(t.function)}</span><span>${displayTermValue(t.usage)}</span></div>
         </div>`;
     }
 
     function updateGroupNote(type, name) {
-      const info = groupDescriptions[name] || ['🔗', name, '선택한 기준에 해당하는 도구가 공통 허브로 연결됩니다.'];
+      const info = groupInfo(name);
       groupNote.querySelector('.group-emoji').classList.remove('cue-click');
       groupNote.querySelector('.group-emoji').textContent = info[0];
-      groupNote.querySelector('.group-text strong').textContent = `${info[1]} · ${type === 'domain' ? '분야' : type === 'function' ? '사용 난이도' : '활용 방식'} · ${info[2]}`;
-      groupNote.querySelector('.group-text p').textContent = '툴끼리 모두 엮지 않고, 선택한 기준에 속한 툴만 한 기준점으로 모아 보여줍니다.';
+      groupNote.querySelector('.group-text strong').textContent = `${info[1]} · ${typeLabel(type)} · ${info[2]}`;
+      groupNote.querySelector('.group-text p').textContent = ui('groupBodyActive');
     }
 
     function resetGroupNote() {
       groupNote.querySelector('.group-emoji').classList.remove('cue-click');
       groupNote.querySelector('.group-emoji').textContent = '🧭';
-      groupNote.querySelector('.group-text strong').textContent = '분류칩이나 툴을 클릭하면 관계가 열립니다';
-      groupNote.querySelector('.group-text p').textContent = '오른쪽 상단 상자와 원형 툴 노드에서 원하는 기준을 선택하세요.';
+      groupNote.querySelector('.group-text strong').textContent = ui('groupDefaultTitle');
+      groupNote.querySelector('.group-text p').textContent = ui('groupDefaultBody');
     }
 
     function renderComparison(type, name) {
       const key = groupKey(type);
       const items = tools.filter(t => valuesFor(t, key).includes(name));
-      const label = type === 'domain' ? '분야' : type === 'function' ? '사용 난이도' : '활용 방식';
-      tableTitle.textContent = `${name} 비교표`;
-      tableDesc.textContent = `${label} 기준으로 묶인 ${items.length}개 도구가 실제 업무에서 어떻게 다르게 쓰이는지 비교합니다.`;
+      const label = typeLabel(type);
+      tableTitle.textContent = `${term(name)} ${ui('compareSuffix')}`;
+      tableDesc.textContent = ui('tableGroupDesc')(label, items.length);
       const orderedItems = type === 'usage' && usageToolOrder[name]
         ? [...items].sort((a, b) => {
             const ai = usageToolOrder[name].indexOf(a.name);
@@ -930,27 +1132,28 @@
         : items;
       tableWrap.innerHTML = `
         <table>
-          <thead><tr><th>툴</th><th>분야</th><th>사용 난이도</th><th>활용 방식</th><th>구분 포인트</th></tr></thead>
+          <thead><tr>${ui('tableHeads').map(head => `<th>${head}</th>`).join('')}</tr></thead>
           <tbody>${orderedItems.map(t => `
             <tr>
               <td>${t.name}${toolThumbHTML(t)}</td>
-              <td><span class="pill">${t.domain}</span></td>
-              <td>${t.function}</td>
-              <td>${displayValue(t.usage)}</td>
-              <td>${t.desc}</td>
+              <td><span class="pill">${term(t.domain)}</span></td>
+              <td>${term(t.function)}</td>
+              <td>${displayTermValue(t.usage)}</td>
+              <td>${descForTool(t)}</td>
             </tr>`).join('')}
           </tbody>
         </table>`;
     }
 
     function resetComparison() {
-      tableTitle.textContent = '묶음별 툴 비교';
-      tableDesc.textContent = '분류 항목을 클릭하면, 그 묶음 안에서 각 툴이 어떤 업무에 쓰이는지 비교표로 바뀝니다.';
-      tableWrap.innerHTML = '<div class="empty-state">오른쪽 상단의 <strong>분야</strong>, <strong>사용 난이도</strong>, <strong>활용 방식</strong> 하위 항목을 클릭해 비교표를 확인하세요.</div>';
+      tableTitle.textContent = ui('tableDefaultTitle');
+      tableDesc.textContent = ui('tableDefaultDesc');
+      tableWrap.innerHTML = `<div class="empty-state">${ui('emptyStateHTML')}</div>`;
     }
 
     function activateGroup(type, name) {
       active = { type, name };
+      activeToolId = null;
       taxonomy.classList.remove('attract');
       renderComparison(type, name);
       document.querySelectorAll('.tax-chip').forEach(c => c.classList.toggle('hot', c.dataset.type === type && c.dataset.name === name));
@@ -991,24 +1194,19 @@
 
     function activateTool(id) {
       const t = tools[Number(id)];
+      active = null;
+      activeToolId = t.id;
       taxonomy.classList.remove('attract');
       renderToolDetail(t);
+      resetGroupNote();
+      document.querySelectorAll('.tax-chip').forEach(c => c.classList.remove('hot'));
+      document.querySelectorAll('.edge').forEach(edge => edge.classList.remove('visible','faint'));
+      document.querySelectorAll('.edge-hub').forEach(hub => hub.classList.remove('visible'));
       document.querySelectorAll('.node').forEach(node => {
         const hot = Number(node.dataset.id) === t.id;
         node.classList.toggle('hot', hot);
-        if (!active) node.classList.toggle('dimmed', !hot);
+        node.classList.toggle('dimmed', !hot);
       });
-      if (!active) {
-        document.querySelectorAll('.edge').forEach(edge => {
-          const linked = Number(edge.dataset.source) === t.id;
-          edge.classList.toggle('visible', linked);
-          edge.classList.toggle('faint', false);
-        });
-        document.querySelectorAll('.edge-hub').forEach(hub => {
-          const key = groupKey(hub.dataset.type);
-          hub.classList.toggle('visible', valuesFor(t, key).includes(hub.dataset.name));
-        });
-      }
     }
 
     function clearToolOnly() {
@@ -1030,7 +1228,7 @@
       const cap = document.getElementById('imageLightboxCaption');
       img.src = src;
       img.alt = caption || '';
-      cap.textContent = caption || '이미지 확대 보기';
+      cap.textContent = caption || ui('lightboxDefault');
       box.classList.add('open');
       box.setAttribute('aria-hidden', 'false');
     }
@@ -1056,11 +1254,58 @@
       if (event.key === 'Escape') closeImageLightbox();
     });
 
-    renderTaxonomy();
+    function applyStaticCopy() {
+      document.documentElement.lang = currentLang;
+      document.title = ui('documentTitle');
+      document.getElementById('kickerText').textContent = ui('kicker');
+      document.getElementById('mainTitle').textContent = ui('title');
+      document.getElementById('subtitle').innerHTML = ui('subtitleHTML');
+      document.getElementById('courseBanner').setAttribute('aria-label', ui('courseAria'));
+      document.getElementById('courseBannerImage').alt = ui('courseImageAlt');
+      document.getElementById('courseEyebrow').textContent = ui('courseEyebrow');
+      document.getElementById('courseTitle').textContent = ui('courseTitle');
+      document.getElementById('courseDesc').textContent = ui('courseDesc');
+      document.getElementById('courseCta').textContent = ui('courseCta');
+      document.getElementById('taxonomyCueText').textContent = ui('taxonomyCue');
+      document.getElementById('toolCueText').textContent = ui('toolCue');
+      document.getElementById('signatureText').textContent = ui('signature');
+      document.getElementById('sideKicker').textContent = ui('sideKicker');
+      document.getElementById('imageLightboxClose').textContent = ui('close');
+      document.querySelectorAll('.lang-button').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.lang === currentLang));
+      });
+    }
+
+    function setLanguage(lang, preserveState = true) {
+      if (!supportedLangs.includes(lang)) lang = 'ko';
+      currentLang = lang;
+      localStorage.setItem('googleAiToolMapLang', lang);
+      const previousGroup = preserveState && active ? { ...active } : null;
+      const previousToolId = preserveState && activeToolId !== null ? activeToolId : null;
+      applyStaticCopy();
+      renderTaxonomy();
+      renderDomainArcs();
+      renderEdges();
+      renderNodes();
+      if (previousGroup) {
+        activateGroup(previousGroup.type, previousGroup.name);
+      } else if (previousToolId !== null) {
+        activateTool(previousToolId);
+      } else {
+        active = null;
+        activeToolId = null;
+        resetGroupNote();
+        resetComparison();
+        taxonomy.classList.add('attract');
+      }
+    }
+
+    document.querySelectorAll('.lang-button').forEach(button => {
+      button.addEventListener('click', () => setLanguage(button.dataset.lang));
+    });
+
     renderRings();
-    renderDomainArcs();
-    renderEdges();
-    renderNodes();
+    setLanguage(currentLang, false);
   </script>
 </body>
 </html>
