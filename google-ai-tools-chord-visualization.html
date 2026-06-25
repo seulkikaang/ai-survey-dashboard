@@ -437,6 +437,7 @@
       border: 1px solid rgba(66,133,244,.20);
     }
     .official-link:hover { background: rgba(66,133,244,.16); }
+    .distinction-text { display: block; }
     .tool-detail p { margin: 0; color: var(--soft); font-size: 13px; line-height: 1.58; word-break: keep-all; }
     .detail-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 14px; }
     .detail-tags span { padding: 7px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04); color: var(--muted); font-size: 11px; font-weight: 510; }
@@ -1165,7 +1166,7 @@
               <td><span class="pill">${term(t.domain)}</span></td>
               <td>${term(t.function)}</td>
               <td>${displayTermValue(t.usage)}</td>
-              <td>${descForTool(t)}</td>
+              <td><span class="distinction-text">${descForTool(t)}</span>${officialLinkHTML(t)}</td>
             </tr>`).join('')}
           </tbody>
         </table>`;
