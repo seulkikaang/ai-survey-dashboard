@@ -438,6 +438,8 @@
     }
     .official-link:hover { background: rgba(66,133,244,.16); }
     .distinction-text { display: block; }
+    .point-link-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .point-link-label { color: #174ea6; font-size: 11px; font-weight: 850; letter-spacing: -.05px; }
     .tool-detail p { margin: 0; color: var(--soft); font-size: 13px; line-height: 1.58; word-break: keep-all; }
     .detail-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 14px; }
     .detail-tags span { padding: 7px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04); color: var(--muted); font-size: 11px; font-weight: 510; }
@@ -648,6 +650,7 @@
         thumbAlt: '대표 이미지',
         lightboxDefault: '이미지 확대 보기',
         officialLink: '공식 페이지 열기',
+        pointLinkLabel: '공식 링크',
         close: '닫기',
         tableHeads: ['툴','분야','사용 난이도','활용 방식','구분 포인트'],
         taxonomyLabels: { domain: '분야', function: '사용 난이도', usage: '활용 방식' },
@@ -685,6 +688,7 @@
         thumbAlt: 'representative image',
         lightboxDefault: 'Image preview',
         officialLink: 'Open official page',
+        pointLinkLabel: 'Official link',
         close: 'Close',
         tableHeads: ['Tool','Domain','Adoption level','Work use case','Distinction'],
         taxonomyLabels: { domain: 'Domain', function: 'Adoption level', usage: 'Work use case' },
@@ -1166,7 +1170,7 @@
               <td><span class="pill">${term(t.domain)}</span></td>
               <td>${term(t.function)}</td>
               <td>${displayTermValue(t.usage)}</td>
-              <td><span class="distinction-text">${descForTool(t)}</span>${officialLinkHTML(t)}</td>
+              <td><span class="distinction-text">${descForTool(t)}</span><div class="point-link-row"><span class="point-link-label">${ui('pointLinkLabel')}</span>${officialLinkHTML(t)}</div></td>
             </tr>`).join('')}
           </tbody>
         </table>`;
